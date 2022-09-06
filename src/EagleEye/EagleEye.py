@@ -2,39 +2,49 @@ import movingpandas as mpd
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from EagleEye.Algorithm.Algorithm import Algorithm
+from EagleEye.Algorithm.AlgorithmType import AlgorithmType
 
 from EagleEye.Clustering.ClusteringType import ClusteringType
 from EagleEye.Pattern.PatternType import PatternType
-
+from EagleEye.Algorithm.traditional.Traditional import Traditional
+from Elibs import *
 
 class EagleEye:
     def __init__(self) -> None:
-        print("[+] initialing Eagle Eye")
+        log("[+] initialing Eagle Eye")
         self.patternType = PatternType.ALL
         self.clusteringType = ClusteringType.DISTANCE
         self.trajCollection = ""
+        self.algorithmType = ""
+        self.algorithm = Algorithm()
+
+    @classmethod
+    def setAlgorithm(self, alg) -> None:
+        log(f"[+] setting algorithm {alg}")
+        self.algorithmType = alg
 
     @classmethod
     def setClusteringType(self, ctype) -> None:
-        print(f"[+] setting clustering type to {ctype}")
+        log(f"[+] setting clustering type to {ctype}")
         self.clusteringType = ctype
     
     @classmethod
     def setPatternType(self, ptype) -> None:
-        print(f"[+] setting patteron type to {ptype}. eye will look for {ptype}")
+        log(f"[+] setting patteron type to {ptype}. eye will look for {ptype}")
         self.patternType = ptype
 
     @classmethod
     def loadDataset(self, dname) -> None:
-        print(f"[+] loading {dname} dataset" )
+        log(f"[+] loading {dname} dataset" )
     
     @classmethod
     def setGeoDf(self, gdf, idColName, timeColName, timeFormat) -> None:
-        print(f"[+] setting geo df" )
+        log(f"[+] setting geo df" )
         self.geoDf = gdf
         self.geoDf['time'] = pd.to_datetime(self.geoDf[timeColName], format=timeFormat)
         self.geoDf = self.geoDf.set_index('time')
-        print(self.geoDf.head())
+        log(self.geoDf.head())
         self.trajCollection = mpd.TrajectoryCollection(self.geoDf, idColName)
         for trajectory in self.trajCollection.trajectories:
             # Calculate speed
@@ -46,11 +56,16 @@ class EagleEye:
 
     @classmethod
     def findPatterns(self) -> None:
-        print("[+] searching for patterns")
+        log("[+] searching for patterns")
+        if self.algorithmType == AlgorithmType.TRADITIONAL:
+            self.algorithm = Traditional()
+        self.algorithm.findPatterns()
+        
+        
 
     @classmethod
     def plotGeoDf(self) -> None:
-        print("[+] plotting geoDf")
+        log("[+] plotting geoDf")
         f, axs = plt.subplots(1,1, figsize=(14, 6))
 
         for traj in self.trajCollection.trajectories: 
@@ -58,12 +73,6 @@ class EagleEye:
 
         plt.show()
 
-        
-
     @classmethod
     def showPatterns(self) -> None:
-        print("[+] patterns ")
-    
-    @classmethod
-    def plotPatterns(self) -> None:
-        print("[+] plotting patterns")
+        log("[+] patterns ")
