@@ -3,3 +3,5 @@ learnings/data
 learnings/.ipynb_checkpoints
 src/.ipynb_checkpoints
 otherWorks/*
+src/*/__pycache__/*
+src/EagleEye/*/__pycache__/*
