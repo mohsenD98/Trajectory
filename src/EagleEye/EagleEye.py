@@ -1,17 +1,13 @@
-import movingpandas as mpd
-import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
 from EagleEye.Algorithm.Algorithm import Algorithm
 from EagleEye.Algorithm.AlgorithmType import AlgorithmType
 
 from EagleEye.Clustering.ClusteringType import ClusteringType
 from EagleEye.Pattern.PatternType import PatternType
 from EagleEye.Algorithm.traditional.Traditional import Traditional
-from Elibs import *
+from libs import *
 
 class EagleEye:
-    def __init__(self) -> None:
+    def __init__(self):
         log("[+] initialing Eagle Eye")
         self.patternType = PatternType.ALL
         self.clusteringType = ClusteringType.DISTANCE
@@ -19,10 +15,19 @@ class EagleEye:
         self.algorithmType = ""
         self.algorithm = Algorithm()
 
-    @classmethod
-    def setAlgorithm(self, alg) -> None:
+    def setAlgorithm(self, alg):
         log(f"[+] setting algorithm {alg}")
         self.algorithmType = alg
+
+        if inputsType == InputsType.USER_TERMINAL: 
+            paramList= get("enter M, K, L, G (seperated by space): ", inputLen=4)
+        elif inputsType == InputsType.DEFAULT_TESTS: 
+            paramList= [2, 2, 2, 2]
+
+
+        if self.algorithmType == AlgorithmType.TRADITIONAL:
+            self.algorithm = Traditional(m=paramList[0], k=paramList[1], l=paramList[2], g=paramList[3])
+
 
     @classmethod
     def setClusteringType(self, ctype) -> None:
@@ -34,44 +39,21 @@ class EagleEye:
         log(f"[+] setting patteron type to {ptype}. eye will look for {ptype}")
         self.patternType = ptype
 
-    @classmethod
-    def loadDataset(self, dname) -> None:
+    def loadDataset(self, dname):
         log(f"[+] loading {dname} dataset" )
+        self.algorithm.setInputDataset(dname)
     
-    @classmethod
-    def setGeoDf(self, gdf, idColName, timeColName, timeFormat) -> None:
-        log(f"[+] setting geo df" )
-        self.geoDf = gdf
-        self.geoDf['time'] = pd.to_datetime(self.geoDf[timeColName], format=timeFormat)
-        self.geoDf = self.geoDf.set_index('time')
-        log(self.geoDf.head())
-        self.trajCollection = mpd.TrajectoryCollection(self.geoDf, idColName)
-        for trajectory in self.trajCollection.trajectories:
-            # Calculate speed
-            trajectory.add_speed(overwrite=True)
-            
-            # Determine direction of movement
-            trajectory.add_direction(overwrite=True)
-
+    def extractTrajectories(self, idColName, timeColName, timeFormat):
+        self.algorithm.extractTrajectories(idColName, timeColName, timeFormat)
 
     @classmethod
     def findPatterns(self) -> None:
         log("[+] searching for patterns")
-        if self.algorithmType == AlgorithmType.TRADITIONAL:
-            self.algorithm = Traditional()
         self.algorithm.findPatterns()
         
-        
-
-    @classmethod
-    def plotGeoDf(self) -> None:
-        log("[+] plotting geoDf")
-        f, axs = plt.subplots(1,1, figsize=(14, 6))
-
-        for traj in self.trajCollection.trajectories: 
-            traj.plot(linestyle='dashed',marker=11, ax=axs, color=np.random.rand(3,))
-
-        plt.show()
+    def plotTrajectories(self):
+        log("[+] plotting trajectories")
+        self.algorithm.plotTrajectories()
 
     @classmethod
     def showPatterns(self) -> None:

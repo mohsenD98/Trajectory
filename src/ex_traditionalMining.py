@@ -6,13 +6,15 @@ import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 warnings.simplefilter(action='ignore', category=UserWarning)
 
-from ex_makePlot import geoDf
 
 if __name__ == '__main__':
   # set runType [DEBUG(to see logs), RELEASE(to hide logs)]
   Utils.runMode = Runtype.DEBUG
+  # get inputs from terminal or current test values
+  Utils.inputsType = InputsType.DEFAULT_TESTS
 
   eye = EagleEye()  
-  eye.setGeoDf(gdf= geoDf, idColName= "id", timeColName="Timestamp", timeFormat= '%d/%m/%Y %H:%M:%S')
   eye.setAlgorithm(AlgorithmType.TRADITIONAL)
-  eye.findPatterns()
+  eye.loadDataset(dname= "/home/mohsen/code/trajectories/learnings/Trajectory/datasets/dataframe.geojson")
+  eye.extractTrajectories(idColName= "id", timeColName="Timestamp", timeFormat= '%d/%m/%Y %H:%M:%S')
+  eye.plotTrajectories()
