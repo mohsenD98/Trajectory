@@ -15,6 +15,8 @@ if __name__ == '__main__':
 
   eye = EagleEye()  
   eye.setAlgorithm(AlgorithmType.TRADITIONAL)
-  eye.loadDataset(dname= "/home/mohsen/code/trajectories/learnings/Trajectory/datasets/dataframe.geojson")
-  eye.extractTrajectories(idColName= "id", timeColName="Timestamp", timeFormat= '%d/%m/%Y %H:%M:%S')
-  eye.plotTrajectories()
+  eye.loadDataset(dname= "/home/mohsen/code/trajectories/learnings/Trajectory/datasets/test1.geojson")
+  eye.setDatasetInfo(idColName= "id", timeColName="Timestamp", timeFormat= '%d/%m/%Y %H:%M:%S')
+  # eye.extractTrajectories()
+  # eye.plotTrajectories()
+  eye.findPatterns()
