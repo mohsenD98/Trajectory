@@ -122,6 +122,4 @@ class Traditional(Algorithm):
             self.cluster.calculate()
             run(self.cluster.plot)
 
-            # log(type(listOfTimeSnapshots[snapshot][self.geometryColName]))
-
         # pattern enumration from clusters

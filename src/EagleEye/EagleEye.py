@@ -19,12 +19,12 @@ class EagleEye:
         log(f"[+] setting algorithm {alg}")
         self.algorithmType = alg
 
-        if inputsType == InputsType.USER_TERMINAL: 
+        if Utils.inputsType == InputsType.USER_TERMINAL: 
             paramList= get("enter M, K, L, G (seperated by space): ", inputLen=4)
-        elif inputsType == InputsType.DEFAULT_TESTS: 
+        elif Utils.inputsType == InputsType.DEFAULT_TESTS: 
             paramList= [2, 2, 2, 2]
-
-
+            log(f"using default params for M= {paramList[0]}, K={paramList[1]} L={paramList[2]} G={paramList[3]} ", important= True)
+            
         if self.algorithmType == AlgorithmType.TRADITIONAL:
             self.algorithm = Traditional(m=paramList[0], k=paramList[1], l=paramList[2], g=paramList[3])
 

@@ -13,9 +13,15 @@ class InputsType(enum.Enum):
 runMode = Runtype.RELEASE
 inputsType = InputsType.DEFAULT_TESTS
 
-def log(input):
+def log(input, important= False):
     if runMode == Runtype.DEBUG: 
-        print(input)
+      if important:
+        print(Fore.RED+input)
+      else:
+         if type(input) == str:
+            print(Fore.WHITE+input)
+         else:
+            print(input)
 
 # get values from terminal
 def get(message, inputLen):
