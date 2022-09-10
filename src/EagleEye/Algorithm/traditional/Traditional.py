@@ -6,7 +6,10 @@ import numpy as np
 
 from typing import overload
 from EagleEye.Algorithm.Algorithm import Algorithm
+from EagleEye.Clustering.Cluster import Cluster
+from EagleEye.Clustering.ClusteringType import ClusteringType
 from libs.Utils import *
+from pandas import DataFrame
 from geopandas import GeoDataFrame
 import movingpandas as mpd
 import pandas as pd
@@ -37,14 +40,27 @@ class Traditional(Algorithm):
         self.gdf =  GeoDataFrame()
         self.trajectoryCollection = mpd.TrajectoryCollection(data=[])
 
+        # clustering class
+        self.cluster = Cluster()
+        self.cluster.setClusteringType(ClusteringType.KMEANS)
+
         self.timeColName = ""
         self.timeFormat = ""
         self.idColName = ""
+        self.geometryColName = ""
 
-    def setDatasetInfo(self, idColName, timeColName, timeFormat):
+    def setClusteringParams(self, min_samples=2 ,max_distance=2, k_means_cluster_count= 3):
+        self.cluster.setClusteringParams(min_samples=min_samples ,max_distance=max_distance, k_means_cluster_count= k_means_cluster_count) 
+
+    def setClusteringType(self, type):
+        self.cluster.setClusteringType(type)
+        log(f"[+] [Traditional] setting cluster type {self.cluster.clusteringType}")
+
+    def setDatasetInfo(self, idColName, timeColName, timeFormat, geometryColName):
         self.timeColName = timeColName
         self.idColName = idColName
         self.timeFormat = timeFormat
+        self.geometryColName = geometryColName
 
     def setInputDataset(self, dname) -> None:
         log(f"[+] [Traditional] setting dataset {dname}")
@@ -96,10 +112,16 @@ class Traditional(Algorithm):
                 geo_df = GeoDataFrame(df)
                 listOfTimeSnapshots[row["last_time"]] = geo_df
 
-        for x in listOfTimeSnapshots:
-            log("\n\n")
-            log(listOfTimeSnapshots[x])
-
         # make cluster snapshots at time - -> end
+        for snapshot in listOfTimeSnapshots:
+            points= [[point.x, point.y] for point in listOfTimeSnapshots[snapshot][self.geometryColName]]
+            log("\n\n")
+            log(listOfTimeSnapshots[snapshot])            
+            d = DataFrame(data=points)
+            self.cluster.setData(d)
+            self.cluster.calculate()
+            run(self.cluster.plot)
+
+            # log(type(listOfTimeSnapshots[snapshot][self.geometryColName]))
 
         # pattern enumration from clusters

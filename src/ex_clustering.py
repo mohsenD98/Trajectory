@@ -1,7 +1,6 @@
 from pandas import DataFrame
-from Cluster import Cluster
-
-from ClusteringType import ClusteringType
+from EagleEye.Clustering.Cluster import Cluster
+from EagleEye.Clustering.ClusteringType import ClusteringType
 
 df = DataFrame(data= [(10,1), (10, 1.5), (20,4), (20, 5), (30, 1), (30, 2)]) 
 

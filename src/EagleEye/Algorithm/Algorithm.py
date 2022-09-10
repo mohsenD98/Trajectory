@@ -15,5 +15,10 @@ class Algorithm():
     def extractTrajectories(self):
         raise NotImplementedError()
 
-    def setDatasetInfo(self, idColName, timeColName, timeFormat):
+    def setDatasetInfo(self, idColName, timeColName, timeFormat, geometryColName):
         raise NotImplementedError()
+
+    def setClusteringParams(self, idColName, timeColName, timeFormat, geometryColName):
+        raise NotImplementedError()
+
+        

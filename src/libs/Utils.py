@@ -21,3 +21,7 @@ def log(input):
 def get(message, inputLen):
     numList = list(map(float, input(Fore.RED+ message).strip().split()))[:inputLen]
     return numList
+
+def run(command):
+   if runMode == Runtype.DEBUG: 
+      command()

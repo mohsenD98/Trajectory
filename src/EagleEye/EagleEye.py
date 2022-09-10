@@ -28,11 +28,13 @@ class EagleEye:
         if self.algorithmType == AlgorithmType.TRADITIONAL:
             self.algorithm = Traditional(m=paramList[0], k=paramList[1], l=paramList[2], g=paramList[3])
 
-    @classmethod
-    def setClusteringType(self, ctype) -> None:
+    def setClusteringType(self, ctype):
         log(f"[+] setting clustering type to {ctype}")
-        self.clusteringType = ctype
+        self.algorithm.setClusteringType(ctype)
     
+    def setClusteringParams(self, min_samples=2 ,max_distance=2, k_means_cluster_count= 3):
+        self.algorithm.setClusteringParams(min_samples=min_samples ,max_distance=max_distance, k_means_cluster_count= k_means_cluster_count)
+
     @classmethod
     def setPatternType(self, ptype) -> None:
         log(f"[+] setting patteron type to {ptype}. eye will look for {ptype}")
@@ -45,9 +47,9 @@ class EagleEye:
     def extractTrajectories(self):
         self.algorithm.extractTrajectories()
 
-    def setDatasetInfo(self, idColName, timeColName, timeFormat):
+    def setDatasetInfo(self, idColName, timeColName, timeFormat, geometryColName):
         log("[+] setting dataset info")
-        self.algorithm.setDatasetInfo(idColName, timeColName, timeFormat)
+        self.algorithm.setDatasetInfo(idColName, timeColName, timeFormat, geometryColName)
 
     def findPatterns(self) -> None:
         log("[+] searching for patterns")
