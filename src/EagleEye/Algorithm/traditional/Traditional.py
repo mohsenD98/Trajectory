@@ -113,13 +113,23 @@ class Traditional(Algorithm):
                 listOfTimeSnapshots[row["last_time"]] = geo_df
 
         # make cluster snapshots at time - -> end
+        clusters= []
         for snapshot in listOfTimeSnapshots:
-            points= [[point.x, point.y] for point in listOfTimeSnapshots[snapshot][self.geometryColName]]
+            points= []
+            for index, record in listOfTimeSnapshots[snapshot].iterrows():
+                x = record[self.geometryColName].x
+                y = record[self.geometryColName].y
+                id = record[self.idColName]
+                points.append([x, y, id])
+            
             log("\n\n")
             log(listOfTimeSnapshots[snapshot])            
             d = DataFrame(data=points)
             self.cluster.setData(d)
-            self.cluster.calculate()
+            cluster = self.cluster.calculate()
+            clusters.append(cluster)
             run(self.cluster.plot)
+            log(cluster)
+        log(clusters)
 
         # pattern enumration from clusters

@@ -1,6 +1,7 @@
 # doc's: https://scikit-learn.org/stable/modules/generated/sklearn.cluster.DBSCAN.html
 # help: https://www.analyticsvidhya.com/blog/2020/09/how-dbscan-clustering-works/
 
+from cgitb import reset
 from EagleEye.Clustering.ClusteringType import ClusteringType
 
 import matplotlib.pyplot as plt  
@@ -36,10 +37,10 @@ class Cluster:
 
     def calculate(self):
         if ClusteringType.DBSCAN == self.clusteringType:
-            self._calcDBSCAN()
+            return self._calcDBSCAN()
 
         if ClusteringType.KMEANS == self.clusteringType:
-            self._calcKMeans()
+            return self._calcKMeans()
 
     def _calcKMeans(self):
             from sklearn.cluster import KMeans
@@ -47,12 +48,29 @@ class Cluster:
             k_means.fit(self.data[[0,1]])
             self.data['KMeans_labels']=k_means.labels_
 
+            result = {}
+            for index, row in self.data.iterrows():
+                if row["KMeans_labels"] in result:
+                    result[row["KMeans_labels"]].append(row[2]) # row[2] is id of trajectory
+                else:
+                    result[row["KMeans_labels"]] = [row[2]]
+            
+            return result
     def _calcDBSCAN(self):  
             from sklearn.cluster import DBSCAN
             dbscan_opt=DBSCAN(eps=self.maxDistance ,min_samples=self.minSamples,)
             dbscan_opt.fit(self.data[[0,1]])
             self.data['DBSCAN_labels']=dbscan_opt.labels_
             self.data['DBSCAN_labels'].value_counts()
+
+            result = {}
+            for index, row in self.data.iterrows():
+                if row["DBSCAN_labels"] in result:
+                    result[row["DBSCAN_labels"]].append(row[2]) # row[2] is id of trajectory
+                else:
+                    result[row["DBSCAN_labels"]] = [row[2]]
+            
+            return result
             
     def plot(self):
         plotTitle = ""
