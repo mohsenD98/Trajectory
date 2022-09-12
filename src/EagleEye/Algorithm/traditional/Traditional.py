@@ -130,6 +130,40 @@ class Traditional(Algorithm):
             clusters.append(cluster)
             run(self.cluster.plot)
             log(cluster)
-        log(clusters)
+            
+        log("\n")
+        log(f"[+] [Traditional] array of clusters generated. len = {len(clusters)}")
 
         # pattern enumration from clusters
+        # TRPM
+        # ----------------------------------
+
+        # STAGE 1: CALCULATE N = (math.ceil(K/L) - 1) * (G - 1) + K + L - 1
+        # this formula guarantees that no valid pattern is missed
+        # ----------------------------------
+        import math
+        n = (math.ceil(self.minDurationOfConsecutive / self.minLengthOfConsecutive) - 1) * (self.maxConsecutiveGap - 1) + self.minDurationOfConsecutive + self.minLengthOfConsecutive - 1
+        log(f"[+] [Traditional] n = {n} guarantees that no valid pattern is missed")
+
+        # STAGE 2: partioning clusters: 
+        # ----------------------------------
+        partions = {}
+        beginIndex = 0
+        lastIndex = beginIndex + n
+        
+
+        while lastIndex <= len(clusters):
+            for i in range(beginIndex, lastIndex):
+                if beginIndex in partions:
+                    partions[beginIndex].append(clusters[i])
+                else:
+                    partions[beginIndex] = [clusters[i]]
+            beginIndex += 1
+            lastIndex += 1
+
+        log(f"[+] [Traditional] partion list generated! {len(partions)} partion is generated and each length is {len(partions[0.0])}")
+
+        # STAGE 3: search in each partion to find co-movements: 
+        # ----------------------------------
+        for _, clusterList in partions.items():
+            log(f"[+] [Traditional - partion# {_}]")
