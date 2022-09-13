@@ -1,3 +1,4 @@
+from os import times
 import movingpandas as mpd
 import pandas as pd
 import geopandas as gpd
@@ -128,7 +129,7 @@ class Traditional(Algorithm):
             self.cluster.setData(d)
             cluster = self.cluster.calculate()
             clusters.append(cluster)
-            run(self.cluster.plot)
+            # run(self.cluster.plot)
             log(cluster)
             
         log("\n")
@@ -167,3 +168,36 @@ class Traditional(Algorithm):
         # ----------------------------------
         for _, clusterList in partions.items():
             log(f"[+] [Traditional - partion# {_}]")
+
+            # init c with firs snapshot
+            values = clusterList[0].values()
+            c = {}
+            for value in values:
+                c[str(value)] = [0]
+                
+            log("[+] [Traditional c = " + str(c), True)
+            for i in range(1, len(clusterList)):
+                st = list(clusterList[i].values())
+                log(f"[+] [Traditional s[{i}] = " + str(st), True)
+                product = cartesianProductDictInList(c, st)
+                listOfNewCandidates = {}
+                
+                for key, value in product.items():
+                    import ast
+                    keys = key.split("-")
+                    cObjects = ast.literal_eval(keys[0])
+                    stObjects = ast.literal_eval(keys[1])
+                    objectsIntersect = list(set(cObjects) & set(stObjects))
+                    timeSerie = value.copy()
+                    timeSerie.append(i)
+                    if False : # timeSerie is valid output objectsIntersect
+                        pass
+                    elif len(objectsIntersect) >= self.minNumberOfElementsInCluster:
+                        listOfNewCandidates[str(objectsIntersect)] = timeSerie
+
+                log("N = " + str(listOfNewCandidates))
+                    
+                # pruning c
+
+                # append listOfNewCandidates to c
+                

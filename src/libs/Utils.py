@@ -31,3 +31,10 @@ def get(message, inputLen):
 def run(command):
    if runMode == Runtype.DEBUG: 
       command()
+
+def cartesianProductDictInList(mDict, mList):
+   result = {}
+   for key, value in mDict.items():
+      for element in mList:
+         result[str(key)+"-"+str(element)] = value
+   return result
