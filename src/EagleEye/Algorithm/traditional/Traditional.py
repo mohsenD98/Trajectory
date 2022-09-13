@@ -1,11 +1,10 @@
-from os import times
 import movingpandas as mpd
 import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import numpy as np
+import ast
 
-from typing import overload
 from EagleEye.Algorithm.Algorithm import Algorithm
 from EagleEye.Clustering.Cluster import Cluster
 from EagleEye.Clustering.ClusteringType import ClusteringType
@@ -162,42 +161,74 @@ class Traditional(Algorithm):
             beginIndex += 1
             lastIndex += 1
 
-        log(f"[+] [Traditional] partion list generated! {len(partions)} partion is generated and each length is {len(partions[0.0])}")
+        log(f"[+] [Traditional] partion list generated! {len(partions)} partion is generated and each length is {len(partions[0.0])}\n")
 
         # STAGE 3: search in each partion to find co-movements: 
         # ----------------------------------
         for _, clusterList in partions.items():
-            log(f"[+] [Traditional - partion# {_}]")
+            log(f"[+] [Traditional] - partion# {_}")
 
             # init c with firs snapshot
             values = clusterList[0].values()
             c = {}
             for value in values:
-                c[str(value)] = [0]
+                c[str(value)] = [1]
                 
-            log("[+] [Traditional c = " + str(c), True)
+            log("[+] [Traditional] c = " + str(c))
             for i in range(1, len(clusterList)):
                 st = list(clusterList[i].values())
-                log(f"[+] [Traditional s[{i}] = " + str(st), True)
+                log(f"[+] [Traditional] s[{i+1}] = " + str(st))
                 product = cartesianProductDictInList(c, st)
                 listOfNewCandidates = {}
                 
                 for key, value in product.items():
-                    import ast
                     keys = key.split("-")
                     cObjects = ast.literal_eval(keys[0])
                     stObjects = ast.literal_eval(keys[1])
                     objectsIntersect = list(set(cObjects) & set(stObjects))
                     timeSerie = value.copy()
-                    timeSerie.append(i)
+                    timeSerie.append(i+1)
                     if False : # timeSerie is valid output objectsIntersect
                         pass
                     elif len(objectsIntersect) >= self.minNumberOfElementsInCluster:
                         listOfNewCandidates[str(objectsIntersect)] = timeSerie
 
-                log("N = " + str(listOfNewCandidates))
+                log("[+] [Traditional] N = " + str(listOfNewCandidates))
                     
                 # pruning c
+                listToDelete = []
+                for mkey, value in c.items():
+                    key = ast.literal_eval(mkey)
+                    # gap is bigger than specified
+                    if i+1 - max(value) >= self.maxConsecutiveGap:
+                        listToDelete.append(key)
+                    # last segement len is < L
+                    if len(value) < self.minLengthOfConsecutive: 
+                        listToDelete.append(key)
+                    
+                    counter = 1
+                    flag = False
+                    lastElement = value[-1]
+                    for element in value[-2::-1]:
+                        if lastElement - element == 1:
+                            counter += 1
+                            if counter >= self.minLengthOfConsecutive:
+                                flag = True
+                                break
+                        else:
+                            if counter >= self.minLengthOfConsecutive:
+                                flag = True
+                                break
+                    if not flag:
+                        listToDelete.append(key)
+
+                for key in listToDelete:
+                    if str(key) in c: 
+                        del c[str(key)]
 
                 # append listOfNewCandidates to c
+                for key, time in listOfNewCandidates.items():
+                    c[str(key)] = time
+                
+            log("\n[+] [Traditional] discovered patterns: "+ str(c) + "\n", True)
                 
