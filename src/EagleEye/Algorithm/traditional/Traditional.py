@@ -19,19 +19,14 @@ class Traditional(Algorithm):
     def __init__(self, m, k, l, g) -> None:
         Algorithm.__init__(self)
         log(f"[+] init Traditional params M={m}, K={k}, L={l}, G={g}")
-
         # Discretization times in seconds
-        self.discretizationTimeSteps = 60
-
+        self.discretizationTimeSteps = 60 # (seconds)
         # the min number of elements in cluster
         self.minNumberOfElementsInCluster = m
-
         # min duration constraint
         self.minDurationOfConsecutive = k
-
         # min length of each consecutive
         self.minLengthOfConsecutive = l
-
         # max gap between each consecutive
         self.maxConsecutiveGap = g
 
@@ -145,7 +140,7 @@ class Traditional(Algorithm):
         n = (math.ceil(self.minDurationOfConsecutive / self.minLengthOfConsecutive) - 1) * (self.maxConsecutiveGap - 1) + self.minDurationOfConsecutive + self.minLengthOfConsecutive - 1
         log(f"[+] [Traditional] n = {n} guarantees that no valid pattern is missed")
 
-        # STAGE 2: partioning clusters: 
+        # STAGE 2: partitioning clusters: 
         # ----------------------------------
         partions = {}
         beginIndex = 0
