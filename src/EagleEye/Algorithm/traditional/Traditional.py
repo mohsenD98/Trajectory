@@ -95,10 +95,15 @@ class Traditional(Algorithm):
             traj.plot(linestyle='dashed',marker=11, ax=axs, color=np.random.rand(3,))
         plt.show()
 
-    def findPatterns(self):
-        log("[+] [Traditional] findPatterns")
-
-        # make snapshot at time - -> end with time step x
+    """
+    The discretization maps the real clock times to indices of the time 
+    intervals during which they occurred. For instance, assume that
+    we partition the time line into intervals of duration 5s and that 
+    the start time is 13:00:20 UTC. Then the time series ⟨13:00:21 UTC,
+    13:00:24 UTC, 13:00:28 UTC, 13:00:32 UTC, 13:00:42 UTC⟩ is discretized
+    into ⟨0, 0, 1, 2, 4⟩.
+    """
+    def generateTimeSnapshots(self, ):
         centralTime= self.dataset[self.timeColName][0]
         self.dataset['last_time'] = (self.dataset.apply(lambda x: (x[self.timeColName] - centralTime).seconds / self.discretizationTimeSteps ,axis=1))
         listOfTimeSnapshots = {}
@@ -112,8 +117,10 @@ class Traditional(Algorithm):
                 df = pd.DataFrame(columns=self.dataset.columns, data=[row])
                 geo_df = GeoDataFrame(df)
                 listOfTimeSnapshots[row["last_time"]] = geo_df
-
-        # make cluster snapshots at time - -> end
+        
+        return listOfTimeSnapshots
+    
+    def generateClusterSnapshots(self, listOfTimeSnapshots):
         clusters= []
         for snapshot in listOfTimeSnapshots:
             points= []
@@ -123,7 +130,7 @@ class Traditional(Algorithm):
                 id = record[self.idColName]
                 points.append([x, y, id])
             
-            log("\n\n")
+            log("\n")
             log(listOfTimeSnapshots[snapshot])            
             d = DataFrame(data=points)
             self.cluster.setData(d)
@@ -131,26 +138,23 @@ class Traditional(Algorithm):
             clusters.append(cluster)
             # run(self.cluster.plot)
             log(cluster)
-            
-        log("\n")
-        log(f"[+] [Traditional] array of clusters generated. len = {len(clusters)}")
+            log("\n")
 
-        # pattern enumration from clusters
-        # TRPM
-        # ----------------------------------
-
-        # STAGE 1: CALCULATE N = (math.ceil(K/L) - 1) * (G - 1) + K + L - 1
-        # this formula guarantees that no valid pattern is missed
-        # ----------------------------------
+        return clusters
+    
+    '''
+        N = (math.ceil(K/L) - 1) * (G - 1) + K + L - 1
+        this formula guarantees that no valid pattern is missed
+    '''
+    def calculateMinNumberOfRequiredSnapshots(self, clusters):
         import math
         n = (math.ceil(self.minDurationOfConsecutive / self.minLengthOfConsecutive) - 1) * (self.maxConsecutiveGap - 1) + self.minDurationOfConsecutive + self.minLengthOfConsecutive - 1
         if n> len(clusters): 
             log("[+] [Traditional] n is bigger than size. setting n as max ")
             n = len(clusters)
-        log(f"[+] [Traditional] n = {n} guarantees that no valid pattern is missed")
+        return n
 
-        # STAGE 2: partitioning clusters: 
-        # ----------------------------------
+    def replicateClustersInPartions(self, n, clusters):
         partions = {}
         beginIndex = 0
         lastIndex = beginIndex + n
@@ -164,16 +168,32 @@ class Traditional(Algorithm):
                     partions[beginIndex] = [clusters[i]]
             beginIndex += 1
             lastIndex += 1
+        return partions
 
-        log(f"[+] [Traditional] partion list generated! {len(partions)} partion is generated and each length is {len(partions[0.0])}\n")
+    def isLastSegmentsLenInListSmallerThanL(self, mList):
+        counter = 1
+        flag = False
+        if self.minLengthOfConsecutive == 1:
+            flag = True
+        lastElement = mList[-1]
+        for element in mList[-2::-1]:
+            if lastElement - element == 1:
+                counter += 1
+                if counter >= self.minLengthOfConsecutive:
+                    flag = True
+                    break
+            else:
+                if counter >= self.minLengthOfConsecutive:
+                    flag = True
+                    break
+        return flag
 
+    def findCoMovementsInPartions(self, partions):
         setOfCoMovements = set()
-        # STAGE 3: search in each partion to find co-movements: 
-        # ----------------------------------
         for _, clusterList in partions.items():
             log(f"[+] [Traditional] - partion# {_}\n---------------------")
 
-            # init c with firs snapshot
+            # init c with first snapshot
             values = clusterList[0].values()
             c = {}
             for value in values:
@@ -195,12 +215,10 @@ class Traditional(Algorithm):
                     timeSerie = value.copy()
                     timeSerie.append(_ + i + 1)
 
-                    if len(objectsIntersect) >= self.minNumberOfElementsInCluster : # timeSerie is valid output objectsIntersect
-                        result =  self.patternDetector.validatePattern(timeSerie=timeSerie)
+                    if len(objectsIntersect) >= self.minNumberOfElementsInCluster : 
+                        result =  self.patternDetector.validatePatternTime(timeSerie=timeSerie)
                         if result[0] == True:
                             setOfCoMovements.add(f"{objectsIntersect}-{timeSerie}")
-                            #log(f"[+] [Traditional] pattern found in {objectsIntersect} - {timeSerie} -> " + str(result[1]), True)
-                        #else:
                         listOfNewCandidates[str(objectsIntersect)] = timeSerie
 
                 log("[+] [Traditional] N = " + str(listOfNewCandidates))
@@ -208,11 +226,10 @@ class Traditional(Algorithm):
                 # pruning c
                 listToDelete = []
                 for mkey, value in c.items():
-                    if len(objectsIntersect) >= self.minNumberOfElementsInCluster : # timeSerie is valid output objectsIntersect
-                        result =  self.patternDetector.validatePattern(timeSerie=timeSerie)
+                    if len(objectsIntersect) >= self.minNumberOfElementsInCluster : 
+                        result =  self.patternDetector.validatePatternTime(timeSerie=timeSerie)
                         if result[0] == True:
                             setOfCoMovements.add(f"{objectsIntersect}-{timeSerie}")
-                            # log(f"[+] [Traditional] pattern found in {objectsIntersect} - {timeSerie} -> " + str(result[1]), True)
                         
                     key = ast.literal_eval(mkey)
                     # gap is bigger than specified
@@ -221,22 +238,7 @@ class Traditional(Algorithm):
                     # last segement len is < L
                     if len(value) < self.minLengthOfConsecutive: 
                         listToDelete.append(key)
-                    
-                    counter = 1
-                    flag = False
-                    if self.minLengthOfConsecutive == 1:
-                        flag = True
-                    lastElement = value[-1]
-                    for element in value[-2::-1]:
-                        if lastElement - element == 1:
-                            counter += 1
-                            if counter >= self.minLengthOfConsecutive:
-                                flag = True
-                                break
-                        else:
-                            if counter >= self.minLengthOfConsecutive:
-                                flag = True
-                                break
+                    flag = self.isLastSegmentsLenInListSmallerThanL(value)
                     if not flag:
                         listToDelete.append(key)
 
@@ -248,10 +250,31 @@ class Traditional(Algorithm):
                 for key, time in listOfNewCandidates.items():
                     c[str(key)] = time
                 
-            # log("\n[+] [Traditional] discovered patterns: "+ str(c) + "\n", True)
             for key, value in c.items():
-                result = self.patternDetector.validatePattern(timeSerie=value)
+                result = self.patternDetector.validatePatternTime(timeSerie=value)
                 if result[0] == True and len(key):
                     setOfCoMovements.add(f"{key}-{value}")
-        log("AllPatterns: " + str(setOfCoMovements), True)
+        return setOfCoMovements
+
+    # TRPM
+    def findPatterns(self):
+        log("[+] [Traditional] findPatterns")
+
+        listOfTimeSnapshots = self.generateTimeSnapshots()
+
+        clusters = self.generateClusterSnapshots(listOfTimeSnapshots)
+            
+        log(f"[+] [Traditional] array of clusters generated. len = {len(clusters)}")
+
+        n = self.calculateMinNumberOfRequiredSnapshots(clusters)
+
+        log(f"[+] [Traditional] n = {n} guarantees that no valid pattern is missed")
+
+        partions = self.replicateClustersInPartions(n, clusters)
+
+        log(f"[+] [Traditional] partion list generated! {len(partions)} partion is generated and each length is {len(partions[0.0])}\n")
+
+        setOfCoMovements = self.findCoMovementsInPartions(partions)
+         
+        log("[+] [Traditional] AllPatterns: " + str(setOfCoMovements), True)
                 

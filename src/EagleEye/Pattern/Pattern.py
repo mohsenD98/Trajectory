@@ -7,7 +7,9 @@ class Pattern:
         self.k = k
         self.g = g
 
-    def validatePattern(self, timeSerie):
+    def validatePatternTime(self, timeSerie):
+        # gap bigger than g is removed in the process so i will not check it here!
+        # last segment len > L
         counter = 1
         flag = False
         if self.l == 1:
@@ -23,6 +25,7 @@ class Pattern:
                 if counter >= self.l:
                     flag = True
                     break
-
+        
+        # min length of beeing togheter > k
         if flag and len(timeSerie) >= self.k: return [True]
         else: return [False]
