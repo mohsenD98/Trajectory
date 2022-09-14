@@ -8,6 +8,9 @@ import ast
 from EagleEye.Algorithm.Algorithm import Algorithm
 from EagleEye.Clustering.Cluster import Cluster
 from EagleEye.Clustering.ClusteringType import ClusteringType
+from EagleEye.Pattern.Pattern import Pattern
+from EagleEye.Pattern.PatternType import PatternType
+
 from libs.Utils import *
 from pandas import DataFrame
 from geopandas import GeoDataFrame
@@ -34,6 +37,9 @@ class Traditional(Algorithm):
         self.dataset = ""
         self.gdf =  GeoDataFrame()
         self.trajectoryCollection = mpd.TrajectoryCollection(data=[])
+
+        # pattern class
+        self.patternDetector = Pattern(m = self.minNumberOfElementsInCluster, k=self.minDurationOfConsecutive, l=self.minLengthOfConsecutive, g=self.maxConsecutiveGap)
 
         # clustering class
         self.cluster = Cluster()
@@ -138,6 +144,9 @@ class Traditional(Algorithm):
         # ----------------------------------
         import math
         n = (math.ceil(self.minDurationOfConsecutive / self.minLengthOfConsecutive) - 1) * (self.maxConsecutiveGap - 1) + self.minDurationOfConsecutive + self.minLengthOfConsecutive - 1
+        if n> len(clusters): 
+            log("[+] [Traditional] n is bigger than size. setting n as max ")
+            n = len(clusters)
         log(f"[+] [Traditional] n = {n} guarantees that no valid pattern is missed")
 
         # STAGE 2: partitioning clusters: 
@@ -161,7 +170,7 @@ class Traditional(Algorithm):
         # STAGE 3: search in each partion to find co-movements: 
         # ----------------------------------
         for _, clusterList in partions.items():
-            log(f"[+] [Traditional] - partion# {_}")
+            log(f"[+] [Traditional] - partion# {_}\n---------------------")
 
             # init c with firs snapshot
             values = clusterList[0].values()
@@ -169,10 +178,11 @@ class Traditional(Algorithm):
             for value in values:
                 c[str(value)] = [1]
                 
-            log("[+] [Traditional] c = " + str(c))
+            log("[+] [Traditional] initial c = " + str(c))
             for i in range(1, len(clusterList)):
                 st = list(clusterList[i].values())
                 log(f"[+] [Traditional] s[{i+1}] = " + str(st))
+                log(f"[+] [Traditional] c = " + str(c))
                 product = cartesianProductDictInList(c, st)
                 listOfNewCandidates = {}
                 
@@ -183,9 +193,11 @@ class Traditional(Algorithm):
                     objectsIntersect = list(set(cObjects) & set(stObjects))
                     timeSerie = value.copy()
                     timeSerie.append(i+1)
-                    if False : # timeSerie is valid output objectsIntersect
-                        pass
-                    elif len(objectsIntersect) >= self.minNumberOfElementsInCluster:
+                    if len(objectsIntersect) >= self.minNumberOfElementsInCluster : # timeSerie is valid output objectsIntersect
+                        result =  self.patternDetector.validatePattern(timeSerie=timeSerie)
+                        if result[0] == True:
+                            log(f"[+] [Traditional] pattern found in {objectsIntersect} - {timeSerie} -> " + str(result[1]), True)
+                        #else:
                         listOfNewCandidates[str(objectsIntersect)] = timeSerie
 
                 log("[+] [Traditional] N = " + str(listOfNewCandidates))
@@ -193,6 +205,11 @@ class Traditional(Algorithm):
                 # pruning c
                 listToDelete = []
                 for mkey, value in c.items():
+                    if len(objectsIntersect) >= self.minNumberOfElementsInCluster : # timeSerie is valid output objectsIntersect
+                        result =  self.patternDetector.validatePattern(timeSerie=timeSerie)
+                        if result[0] == True:
+                            log(f"[+] [Traditional] pattern found in {objectsIntersect} - {timeSerie} -> " + str(result[1]), True)
+                        
                     key = ast.literal_eval(mkey)
                     # gap is bigger than specified
                     if i+1 - max(value) >= self.maxConsecutiveGap:
@@ -203,6 +220,8 @@ class Traditional(Algorithm):
                     
                     counter = 1
                     flag = False
+                    if self.minLengthOfConsecutive == 1:
+                        flag = True
                     lastElement = value[-1]
                     for element in value[-2::-1]:
                         if lastElement - element == 1:
