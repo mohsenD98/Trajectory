@@ -21,7 +21,7 @@ class EagleEye:
             paramList= get("enter M, K, L, G (seperated by space): ", inputLen=4)
         elif Utils.inputsType == InputsType.DEFAULT_TESTS: 
             # in platoon L should be 1
-            paramList= [2, 3, 2, 2]
+            paramList= [2, 2, 1, 6]
             log(f"using default params for M= {paramList[0]}, K={paramList[1]} L={paramList[2]} G={paramList[3]} ", important= True)
             
         if self.algorithmType == AlgorithmType.TRADITIONAL:

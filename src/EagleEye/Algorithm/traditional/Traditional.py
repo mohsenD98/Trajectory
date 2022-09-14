@@ -66,6 +66,8 @@ class Traditional(Algorithm):
     def setInputDataset(self, dname) -> None:
         log(f"[+] [Traditional] setting dataset {dname}")
         self.dataset = gpd.read_file(dname);
+        self.dataset.plot()
+        run(plt.show)
         log(self.dataset.head(2))
 
     def extractTrajectories(self):
@@ -254,6 +256,7 @@ class Traditional(Algorithm):
                 result = self.patternDetector.validatePatternTime(timeSerie=value)
                 if result[0] == True and len(key):
                     setOfCoMovements.add(f"{key}-{value}")
+            log(f"[+] Traditonal comovements in partion [{_}] " + str(setOfCoMovements), True)
         return setOfCoMovements
 
     # TRPM

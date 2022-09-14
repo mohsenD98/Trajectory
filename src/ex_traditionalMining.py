@@ -15,7 +15,7 @@ if __name__ == '__main__':
 
   eye = EagleEye()  
   eye.setAlgorithm(AlgorithmType.TRADITIONAL)
-  eye.loadDataset(dname= "/home/mohsen/code/trajectories/learnings/Trajectory/datasets/general_dataframe_fig4.geojson")
+  eye.loadDataset(dname= "/home/mohsen/code/trajectories/learnings/Trajectory/datasets/general_dataframe_fig1.geojson")
   eye.setDatasetInfo(idColName= "id", timeColName="Timestamp", timeFormat= '%d/%m/%Y %H:%M:%S', geometryColName= "geometry")
   eye.setClusteringType(ClusteringType.DBSCAN)
   eye.setClusteringParams(min_samples=1 ,max_distance=3)
