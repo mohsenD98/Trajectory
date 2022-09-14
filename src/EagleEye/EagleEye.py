@@ -2,14 +2,12 @@ from EagleEye.Algorithm.Algorithm import Algorithm
 from EagleEye.Algorithm.AlgorithmType import AlgorithmType
 
 from EagleEye.Clustering.ClusteringType import ClusteringType
-from EagleEye.Pattern.PatternType import PatternType
 from EagleEye.Algorithm.traditional.Traditional import Traditional
 from libs import *
 
 class EagleEye:
     def __init__(self):
         log("[+] initialing Eagle Eye")
-        self.patternType = PatternType.ALL
         self.clusteringType = ClusteringType.DISTANCE
         self.trajCollection = ""
         self.algorithmType = ""
@@ -22,6 +20,7 @@ class EagleEye:
         if Utils.inputsType == InputsType.USER_TERMINAL: 
             paramList= get("enter M, K, L, G (seperated by space): ", inputLen=4)
         elif Utils.inputsType == InputsType.DEFAULT_TESTS: 
+            # in platoon L should be 1
             paramList= [2, 3, 2, 2]
             log(f"using default params for M= {paramList[0]}, K={paramList[1]} L={paramList[2]} G={paramList[3]} ", important= True)
             
@@ -34,11 +33,6 @@ class EagleEye:
     
     def setClusteringParams(self, min_samples=2 ,max_distance=2, k_means_cluster_count= 3):
         self.algorithm.setClusteringParams(min_samples=min_samples ,max_distance=max_distance, k_means_cluster_count= k_means_cluster_count)
-
-    @classmethod
-    def setPatternType(self, ptype) -> None:
-        log(f"[+] setting patteron type to {ptype}. eye will look for {ptype}")
-        self.patternType = ptype
 
     def loadDataset(self, dname):
         log(f"[+] loading {dname} dataset" )

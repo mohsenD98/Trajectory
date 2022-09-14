@@ -167,6 +167,7 @@ class Traditional(Algorithm):
 
         log(f"[+] [Traditional] partion list generated! {len(partions)} partion is generated and each length is {len(partions[0.0])}\n")
 
+        setOfCoMovements = set()
         # STAGE 3: search in each partion to find co-movements: 
         # ----------------------------------
         for _, clusterList in partions.items():
@@ -176,7 +177,7 @@ class Traditional(Algorithm):
             values = clusterList[0].values()
             c = {}
             for value in values:
-                c[str(value)] = [1]
+                c[str(value)] = [_ + 1]
                 
             log("[+] [Traditional] initial c = " + str(c))
             for i in range(1, len(clusterList)):
@@ -192,11 +193,13 @@ class Traditional(Algorithm):
                     stObjects = ast.literal_eval(keys[1])
                     objectsIntersect = list(set(cObjects) & set(stObjects))
                     timeSerie = value.copy()
-                    timeSerie.append(i+1)
+                    timeSerie.append(_ + i + 1)
+
                     if len(objectsIntersect) >= self.minNumberOfElementsInCluster : # timeSerie is valid output objectsIntersect
                         result =  self.patternDetector.validatePattern(timeSerie=timeSerie)
                         if result[0] == True:
-                            log(f"[+] [Traditional] pattern found in {objectsIntersect} - {timeSerie} -> " + str(result[1]), True)
+                            setOfCoMovements.add(f"{objectsIntersect}-{timeSerie}")
+                            #log(f"[+] [Traditional] pattern found in {objectsIntersect} - {timeSerie} -> " + str(result[1]), True)
                         #else:
                         listOfNewCandidates[str(objectsIntersect)] = timeSerie
 
@@ -208,11 +211,12 @@ class Traditional(Algorithm):
                     if len(objectsIntersect) >= self.minNumberOfElementsInCluster : # timeSerie is valid output objectsIntersect
                         result =  self.patternDetector.validatePattern(timeSerie=timeSerie)
                         if result[0] == True:
-                            log(f"[+] [Traditional] pattern found in {objectsIntersect} - {timeSerie} -> " + str(result[1]), True)
+                            setOfCoMovements.add(f"{objectsIntersect}-{timeSerie}")
+                            # log(f"[+] [Traditional] pattern found in {objectsIntersect} - {timeSerie} -> " + str(result[1]), True)
                         
                     key = ast.literal_eval(mkey)
                     # gap is bigger than specified
-                    if i+1 - max(value) >= self.maxConsecutiveGap:
+                    if i + 1 - max(value) >= self.maxConsecutiveGap:
                         listToDelete.append(key)
                     # last segement len is < L
                     if len(value) < self.minLengthOfConsecutive: 
@@ -244,5 +248,10 @@ class Traditional(Algorithm):
                 for key, time in listOfNewCandidates.items():
                     c[str(key)] = time
                 
-            log("\n[+] [Traditional] discovered patterns: "+ str(c) + "\n", True)
+            # log("\n[+] [Traditional] discovered patterns: "+ str(c) + "\n", True)
+            for key, value in c.items():
+                result = self.patternDetector.validatePattern(timeSerie=value)
+                if result[0] == True and len(key):
+                    setOfCoMovements.add(f"{key}-{value}")
+        log("AllPatterns: " + str(setOfCoMovements), True)
                 

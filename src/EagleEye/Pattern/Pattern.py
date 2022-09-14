@@ -8,10 +8,21 @@ class Pattern:
         self.g = g
 
     def validatePattern(self, timeSerie):
-        if self.isPlatoon(serie= timeSerie):
-            return [True, PatternType.PLATOON]
-        else:
-            return [False, PatternType.NONE]
+        counter = 1
+        flag = False
+        if self.l == 1:
+            flag = True
+        lastElement = timeSerie[-1]
+        for element in timeSerie[-2::-1]:
+            if lastElement - element == 1:
+                counter += 1
+                if counter >= self.l:
+                    flag = True
+                    break
+            else:
+                if counter >= self.l:
+                    flag = True
+                    break
 
-    def isPlatoon(self, serie):
-        if len(serie) >= self.k: return True
+        if flag and len(timeSerie) >= self.k: return [True]
+        else: return [False]
