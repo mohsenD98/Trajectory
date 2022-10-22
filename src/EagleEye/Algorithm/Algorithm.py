@@ -5,7 +5,6 @@ class Algorithm():
     def findPatterns(self) -> None:
         raise NotImplementedError()
 
-
     def setInputDataset(self, dname) -> None:
         raise NotImplementedError()
 

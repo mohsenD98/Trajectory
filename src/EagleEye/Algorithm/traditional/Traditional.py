@@ -138,7 +138,7 @@ class Traditional(Algorithm):
             self.cluster.setData(d)
             cluster = self.cluster.calculate()
             clusters.append(cluster)
-            # run(self.cluster.plot)
+            run(self.cluster.plot)
             log(cluster)
             log("\n")
 
@@ -163,7 +163,7 @@ class Traditional(Algorithm):
         
 
         while lastIndex <= len(clusters):
-            for i in range(beginIndex, lastIndex):
+            for i in range(int(beginIndex), int(lastIndex)):
                 if beginIndex in partions:
                     partions[beginIndex].append(clusters[i])
                 else:

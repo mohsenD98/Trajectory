@@ -14,14 +14,14 @@ runMode = Runtype.RELEASE
 inputsType = InputsType.DEFAULT_TESTS
 
 def log(input, important= False):
+    if important:
+       print(Fore.RED+input)
+
     if runMode == Runtype.DEBUG: 
-      if important:
-        print(Fore.RED+input)
+      if type(input) == str:
+         print(Fore.WHITE+input)
       else:
-         if type(input) == str:
-            print(Fore.WHITE+input)
-         else:
-            print(input)
+         print(input)
 
 # get values from terminal
 def get(message, inputLen):
@@ -38,3 +38,14 @@ def cartesianProductDictInList(mDict, mList):
       for element in mList:
          result[str(key)+"-"+str(element)] = value
    return result
+
+# test
+if __name__ == "__main__":
+   # c = {}
+   # c["1,2"] = ([1], 1)
+   # c["3,4,5"] = ([1], 1)
+   st = ["1,2", "3,4", "1", "234", "2,3", "3,4"]
+   st=[x for x in st if len(x)>=2]
+   print(st, st)
+   # print(cartesianProductDictInList(c, st))
+

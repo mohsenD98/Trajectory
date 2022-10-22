@@ -98,8 +98,75 @@ df2 = pd.DataFrame([
   {'id':6, 'geometry':Point(31, 20), 'Timestamp':datetime(2022,1,1,12,8,0)},
   {'id':6, 'geometry':Point(40, 10), 'Timestamp':datetime(2022,1,1,12,9,0)},
   ])
-geoDf = GeoDataFrame(df1)
+
+# my example for relations (family, co-worker, friend, one person)
+df3 = pd.DataFrame([
+  {'id':1, 'geometry':Point(10, 100), 'Timestamp':datetime(2022,1,1,12,1,0)},
+  {'id':1, 'geometry':Point(10, 90), 'Timestamp':datetime(2022,1,1,12,2,0)},
+  {'id':1, 'geometry':Point(10, 80), 'Timestamp':datetime(2022,1,1,12,3,0)},
+  {'id':1, 'geometry':Point(10, 70), 'Timestamp':datetime(2022,1,1,12,4,0)},
+  {'id':1, 'geometry':Point(10, 60), 'Timestamp':datetime(2022,1,1,12,5,0)},
+  {'id':1, 'geometry':Point(10, 50), 'Timestamp':datetime(2022,1,1,12,6,0)},
+  {'id':1, 'geometry':Point(10, 40), 'Timestamp':datetime(2022,1,1,12,7,0)},
+
+
+  {'id':2, 'geometry':Point(12, 100), 'Timestamp':datetime(2022,1,1,12,1,0)},
+  {'id':2, 'geometry':Point(12, 90), 'Timestamp':datetime(2022,1,1,12,2,0)},
+  {'id':2, 'geometry':Point(12, 80), 'Timestamp':datetime(2022,1,1,12,3,0)},
+  {'id':2, 'geometry':Point(12, 70), 'Timestamp':datetime(2022,1,1,12,4,0)},
+  {'id':2, 'geometry':Point(12, 60), 'Timestamp':datetime(2022,1,1,12,5,0)},
+  {'id':2, 'geometry':Point(12, 50), 'Timestamp':datetime(2022,1,1,12,6,0)},
+  {'id':2, 'geometry':Point(12, 40), 'Timestamp':datetime(2022,1,1,12,7,0)},
+
+
+  {'id':3, 'geometry':Point(40, 100), 'Timestamp':datetime(2022,1,1,12,1,0)},
+  {'id':3, 'geometry':Point(40, 90), 'Timestamp':datetime(2022,1,1,12,2,0)},
+  {'id':3, 'geometry':Point(14, 80), 'Timestamp':datetime(2022,1,1,12,3,0)},
+  {'id':3, 'geometry':Point(40, 70), 'Timestamp':datetime(2022,1,1,12,4,0)},
+  {'id':3, 'geometry':Point(40, 60), 'Timestamp':datetime(2022,1,1,12,5,0)},
+  {'id':3, 'geometry':Point(14, 50), 'Timestamp':datetime(2022,1,1,12,6,0)},
+  {'id':3, 'geometry':Point(40, 40), 'Timestamp':datetime(2022,1,1,12,7,0)},
+
+
+  {'id':4, 'geometry':Point(42, 100), 'Timestamp':datetime(2022,1,1,12,1,0)},
+  {'id':4, 'geometry':Point(42, 90), 'Timestamp':datetime(2022,1,1,12,2,0)},
+  {'id':4, 'geometry':Point(42, 80), 'Timestamp':datetime(2022,1,1,12,3,0)},
+  {'id':4, 'geometry':Point(42, 70), 'Timestamp':datetime(2022,1,1,12,4,0)},
+  {'id':4, 'geometry':Point(42, 60), 'Timestamp':datetime(2022,1,1,12,5,0)},
+  {'id':4, 'geometry':Point(42, 50), 'Timestamp':datetime(2022,1,1,12,6,0)},
+  {'id':4, 'geometry':Point(42, 40), 'Timestamp':datetime(2022,1,1,12,7,0)},
+
+
+  {'id':5, 'geometry':Point(44, 100), 'Timestamp':datetime(2022,1,1,12,1,0)},
+  {'id':5, 'geometry':Point(44, 90), 'Timestamp':datetime(2022,1,1,12,2,0)},
+  {'id':5, 'geometry':Point(73, 80), 'Timestamp':datetime(2022,1,1,12,3,0)},
+  {'id':5, 'geometry':Point(44, 70), 'Timestamp':datetime(2022,1,1,12,4,0)},
+  {'id':5, 'geometry':Point(44, 60), 'Timestamp':datetime(2022,1,1,12,5,0)},
+  {'id':5, 'geometry':Point(73, 50), 'Timestamp':datetime(2022,1,1,12,6,0)},
+  {'id':5, 'geometry':Point(44, 40), 'Timestamp':datetime(2022,1,1,12,7,0)},
+
+
+  {'id':6, 'geometry':Point(75, 100), 'Timestamp':datetime(2022,1,1,12,1,0)},
+  {'id':6, 'geometry':Point(75, 90), 'Timestamp':datetime(2022,1,1,12,2,0)},
+  {'id':6, 'geometry':Point(75, 80), 'Timestamp':datetime(2022,1,1,12,3,0)},
+  {'id':6, 'geometry':Point(102, 70), 'Timestamp':datetime(2022,1,1,12,4,0)},
+  {'id':6, 'geometry':Point(75, 60), 'Timestamp':datetime(2022,1,1,12,5,0)},
+  {'id':6, 'geometry':Point(75, 50), 'Timestamp':datetime(2022,1,1,12,6,0)},
+  {'id':6, 'geometry':Point(102, 40), 'Timestamp':datetime(2022,1,1,12,7,0)},
+
+
+  {'id':7, 'geometry':Point(105, 100), 'Timestamp':datetime(2022,1,1,12,1,0)},
+  {'id':7, 'geometry':Point(105, 90), 'Timestamp':datetime(2022,1,1,12,2,0)},
+  {'id':7, 'geometry':Point(105, 80), 'Timestamp':datetime(2022,1,1,12,3,0)},
+  {'id':7, 'geometry':Point(105, 70), 'Timestamp':datetime(2022,1,1,12,4,0)},
+  {'id':7, 'geometry':Point(105, 60), 'Timestamp':datetime(2022,1,1,12,5,0)},
+  {'id':7, 'geometry':Point(105, 50), 'Timestamp':datetime(2022,1,1,12,6,0)},
+  {'id':7, 'geometry':Point(105, 40), 'Timestamp':datetime(2022,1,1,12,7,0)},
+
+])
+
+geoDf = GeoDataFrame(df3)
 geoDf.plot()
 plt.show()
 
-geoDf.to_file('general_dataframe_fig1.geojson', driver='GeoJSON')  
+geoDf.to_file('general_dataframe_rel_1.geojson', driver='GeoJSON')  

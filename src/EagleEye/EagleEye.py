@@ -1,5 +1,6 @@
 from EagleEye.Algorithm.Algorithm import Algorithm
 from EagleEye.Algorithm.AlgorithmType import AlgorithmType
+from EagleEye.Algorithm.relationship.RelationShip import RelationShip
 
 from EagleEye.Clustering.ClusteringType import ClusteringType
 from EagleEye.Algorithm.traditional.Traditional import Traditional
@@ -21,11 +22,14 @@ class EagleEye:
             paramList= get("enter M, K, L, G (seperated by space): ", inputLen=4)
         elif Utils.inputsType == InputsType.DEFAULT_TESTS: 
             # in platoon L should be 1
-            paramList= [2, 2, 1, 6]
+            paramList= [2, 3, 2, 2]
             log(f"using default params for M= {paramList[0]}, K={paramList[1]} L={paramList[2]} G={paramList[3]} ", important= True)
-            
+                
         if self.algorithmType == AlgorithmType.TRADITIONAL:
             self.algorithm = Traditional(m=paramList[0], k=paramList[1], l=paramList[2], g=paramList[3])
+        
+        elif self.algorithmType == AlgorithmType.RELATION:
+            self.algorithm = RelationShip(m=paramList[0], k=paramList[1], l=paramList[2], g=paramList[3])
 
     def setClusteringType(self, ctype):
         log(f"[+] setting clustering type to {ctype}")
@@ -45,7 +49,11 @@ class EagleEye:
         log("[+] setting dataset info")
         self.algorithm.setDatasetInfo(idColName, timeColName, timeFormat, geometryColName)
 
-    def findPatterns(self) -> None:
+    def findComovementPatterns(self) -> None:
+        log("[+] searching for patterns")
+        self.algorithm.findPatterns()
+    
+    def findeRelationPatterns(self):
         log("[+] searching for patterns")
         self.algorithm.findPatterns()
         
