@@ -191,7 +191,7 @@ class RelationShip(Algorithm):
         return flag
 
     def findCoMovementsInPartions(self, partions):
-        setOfCoMovements = set()
+        setOfCoMovements = list()
         for _, clusterList in partions.items():
             log(f"[+] [RelationShip] - partion# {_}\n-------------------------------")
 
@@ -244,16 +244,14 @@ class RelationShip(Algorithm):
                 # append new values that appeared just now!
                 for key in st:
                     if str(key) not in c:
-                        log("appeared just now" + str(key))
+                        log("[+] [new] appeared just now" + str(key))
                         c[str(key)] = [[i+1],[1,1]]   
                          
                 log("new c = ")
                 for key, value in c.items():
-                    print(key, value)
-                log("===============================")   
-
-            log("[+] [RelationShip] initial c = " + str(c))
-
+                    log(str(key) + str(value))
+                
+            setOfCoMovements.append(c)
  
         return setOfCoMovements
 
@@ -267,7 +265,7 @@ class RelationShip(Algorithm):
             
         log(f"[+] [RelationShip] array of clusters generated. len = {len(clusters)}")
 
-        n = 7 # self.calculateMinNumberOfRequiredSnapshots(clusters)
+        n = self.calculateMinNumberOfRequiredSnapshots(clusters)
 
         log(f"[+] [RelationShip] n = {n} guarantees that no valid pattern is missed")
 
@@ -276,6 +274,9 @@ class RelationShip(Algorithm):
         log(f"[+] [RelationShip] partion list generated! {len(partions)} partion is generated and each length is {len(partions[0.0])}\n")
 
         setOfCoMovements = self.findCoMovementsInPartions(partions)
-         
-        log("[+] [RelationShip] AllPatterns: " + str(setOfCoMovements), True)
-                
+        
+        log(f"\n\n[+] [RelationShip] Results\n")
+        for element in setOfCoMovements:
+            for key, val in element.items():
+                print("~>  ",key, val, " -> rel = ", val[1][0]/val[1][1])    
+            print("----------------------------------------------------") 
