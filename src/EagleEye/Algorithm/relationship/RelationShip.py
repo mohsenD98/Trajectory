@@ -245,7 +245,7 @@ class RelationShip(Algorithm):
                 for key in st:
                     if str(key) not in c:
                         log("[+] [new] appeared just now" + str(key))
-                        c[str(key)] = [[i+1],[1,1]]   
+                        c[str(key)] = [[_ + i + 1],[1,1]]   
                          
                 log("new c = ")
                 for key, value in c.items():
@@ -275,8 +275,35 @@ class RelationShip(Algorithm):
 
         setOfCoMovements = self.findCoMovementsInPartions(partions)
         
-        log(f"\n\n[+] [RelationShip] Results\n")
+        log(f"\n\n[+] [RelationShip] Each Results\n")
+        partion = 0
         for element in setOfCoMovements:
+            partion += 1
+            print(f"~>  partion #{partion}")
             for key, val in element.items():
                 print("~>  ",key, val, " -> rel = ", val[1][0]/val[1][1])    
-            print("----------------------------------------------------") 
+            print("------------------------------------------------------------") 
+        
+        # merge results
+        results = dict()
+        for element in setOfCoMovements:
+            for key, val in element.items():
+                if key in results:
+                    for time in val[0]:
+                        results[key].append(time)
+                else:
+                    results[key] = val[0]
+        
+        # remove duplicate results
+        for key, value in results.items():
+            results[key] = [set(value)]
+
+        # calculate final relations 
+        lastTime= len(clusters)
+        for key, value in results.items():
+            rel = len(value[0]) / (lastTime - min(value[0]) +1 )
+            results[key].append(rel)
+        
+        log(f"\n\n[+] [RelationShip] final Results")
+        for key, value in results.items():
+            print(key, " - ", value)
