@@ -48,6 +48,13 @@ def plog(d, indent=0):
             plog(value, indent+1)
          else:
             print('\t' * (indent+1) + str(value))
+
+# pretty Log Dict
+def ploglist(mlist, indent=0):
+   if runMode == Runtype.DEBUG: 
+      for d in mlist:
+         plog(d)
+
 # test
 if __name__ == "__main__":
    # c = {}

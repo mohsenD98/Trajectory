@@ -166,17 +166,44 @@ class Index(Algorithm):
 
 
     def indexEach(self, partions):
-        setOfCoMovements = list()
+        setOfIndexes = list()
+        currentTime = 0
         for _, clusterList in partions.items():
-            log(f"[+] [Index] - partion# {_}\n-------------------------------")
+            log(f"\n[+] [Index] - partion# {_}\n-------------------------------")
         
-            for i in range(0, len(clusterList)):
-                st = list(clusterList[i].values())
-                st=[x for x in st if len(x)>=self.minNumberOfElementsInCluster]
-                print(st)
 
+            nodes= []
+            for i in range(0, len(clusterList)):
+                clusters = list(clusterList[i].values())
+                clusters =[x for x in clusters if len(x)>=self.minNumberOfElementsInCluster]
+                currentTime += 1
+                log(clusters)
+
+                for cluster in clusters:
+                    for element in cluster:
+                        for leaf in cluster:
+                            if leaf != element:
+
+                                # search in nodes if exists update else append
+                                find = False
+                                index = 0
+                                for n in nodes:
+                                    if element in n:
+                                        find = True
+                                        break
+                                    index += 1
+                                
+                                if find:
+                                    if leaf in nodes[index][element]:
+                                        nodes[index][element][leaf].append(currentTime)
+                                    else:
+                                        nodes[index][element][leaf]=[currentTime]
+                                else:
+                                    nodes.append({element:{leaf:[currentTime]}})
+
+            setOfIndexes.append(nodes)
                     
-        return setOfCoMovements
+        return setOfIndexes
 
     # TRPM
     def saveIndexedPatterns(self):
@@ -196,8 +223,62 @@ class Index(Algorithm):
 
         log(f"[+] [Index] partion list generated! {len(partions)} partion is generated! \n")
 
-        setOfCoMovements = self.indexEach(partions)
+        setOfIndexes = self.indexEach(partions)
         
-        log(f"\n\n[+] [Index] Each Results\n")
-
         log(f"\n\n[+] [Index] final Results")
+
+        # reduce results:
+        result = {}
+        for nodes in setOfIndexes:
+            for node in nodes:
+                for element, leafs in node.items():
+                    for leaf, times in leafs.items():
+                        if element in result:
+                            if leaf in result[element]:
+                                    result[element][leaf] += times 
+                            else:
+                                result[element][leaf] = times
+                        else:
+                            result[element] = {leaf:times}
+
+        plog(result)
+
+# result example: 
+# {
+# 1.0: 
+#     {
+#         2.0: [1, 2, 3, 4, 5, 6, 7], 
+#         3.0: [3, 6]
+#     }, 
+# 2.0: 
+#     {
+#         1.0: [1, 2, 3, 4, 5, 6, 7], 
+#         3.0: [3, 6]
+#     }, 
+# 3.0: 
+#     {
+#         4.0: [1, 2, 4, 5, 7],
+#         5.0: [1, 2, 4, 5, 7], 
+#         1.0: [3, 6],
+#         2.0: [3, 6]
+#     },
+# 4.0: 
+#     {
+#         3.0: [1, 2, 4, 5, 7], 
+#         5.0: [1, 2, 4, 5, 7]
+#     }, 
+# 5.0: {
+#         3.0: [1, 2, 4, 5, 7], 
+#         4.0: [1, 2, 4, 5, 7], 
+#         6.0: [3, 6]
+#     }, 
+# 6.0: 
+#     {
+#         5.0: [3, 6], 
+#         7.0: [4, 7]
+#     }
+# 7.0: 
+#     {
+#         6.0: [4, 7]
+#     }
+# }
