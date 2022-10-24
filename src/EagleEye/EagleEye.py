@@ -1,6 +1,7 @@
 from EagleEye.Algorithm.Algorithm import Algorithm
 from EagleEye.Algorithm.AlgorithmType import AlgorithmType
 from EagleEye.Algorithm.relationship.RelationShip import RelationShip
+from EagleEye.Algorithm.indexing.Indexing import Index
 
 from EagleEye.Clustering.ClusteringType import ClusteringType
 from EagleEye.Algorithm.traditional.Traditional import Traditional
@@ -30,6 +31,9 @@ class EagleEye:
         
         elif self.algorithmType == AlgorithmType.RELATION:
             self.algorithm = RelationShip(m=paramList[0], k=paramList[1], l=paramList[2], g=paramList[3])
+        
+        elif self.algorithmType == AlgorithmType.INDEXING:
+            self.algorithm = Index(m=paramList[0], k=paramList[1], l=paramList[2], g=paramList[3])
 
     def setClusteringType(self, ctype):
         log(f"[+] setting clustering type to {ctype}")
@@ -59,4 +63,8 @@ class EagleEye:
         
     def plotTrajectories(self):
         log("[+] plotting trajectories")
-        self.algorithm.plotTrajectories()
+        self.algorithm.plotTrajectories()      
+
+    def saveIndexedPatterns(self):
+        log("[+] save Indexed Patterns")
+        self.algorithm.saveIndexedPatterns()

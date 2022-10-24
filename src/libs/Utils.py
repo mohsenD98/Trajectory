@@ -39,6 +39,15 @@ def cartesianProductDictInList(mDict, mList):
          result[str(key)+"-"+str(element)] = value
    return result
 
+# pretty Log Dict
+def plog(d, indent=0):
+   if runMode == Runtype.DEBUG: 
+      for key, value in d.items():
+         print('\t' * indent + str(key))
+         if isinstance(value, dict):
+            plog(value, indent+1)
+         else:
+            print('\t' * (indent+1) + str(value))
 # test
 if __name__ == "__main__":
    # c = {}
