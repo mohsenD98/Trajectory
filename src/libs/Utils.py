@@ -55,6 +55,45 @@ def ploglist(mlist, indent=0):
       for d in mlist:
          plog(d)
 
+# ref: https://stackoverflow.com/questions/10104700/how-to-set-networkx-edge-labels-offset-to-avoid-label-overlap
+def plotListOfGraphs(dicOfGraphs):
+   if runMode == Runtype.DEBUG: 
+      import matplotlib.pyplot as plt
+      from matplotlib.pyplot import  text
+      import networkx as nx
+
+      graphs = list(dicOfGraphs.keys())
+
+      for key in graphs:
+         G=nx.Graph()
+         edgesStruct = dicOfGraphs[int(key)]
+         leafs = list(edgesStruct.keys())
+
+         weights = dict()
+         for leaf in leafs:
+            G.add_edge(key,leaf,weight=0.5)
+            weights[(key, leaf)] = str(dicOfGraphs[key][leaf])
+
+         pos=nx.spring_layout(G) # positions for all nodes
+
+         # nodes
+         nx.draw_networkx_nodes(G,pos, node_size=700, node_color="red")
+
+         # edges
+         nx.draw_networkx_edges(G,pos,width=6,alpha=0.5,edge_color='black')
+         
+         # labels
+         nx.draw_networkx_labels(G,pos,font_size=10,font_family='sans-serif')
+
+         nx.draw_networkx_edge_labels(G,pos, weights, label_pos=0.3)
+
+         plt.axis('off')
+         # plt.savefig("weighted_graph.png") 
+         plt.show() 
+
+
+
+
 # test
 if __name__ == "__main__":
    # c = {}

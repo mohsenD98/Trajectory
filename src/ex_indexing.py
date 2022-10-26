@@ -19,4 +19,6 @@ if __name__ == '__main__':
   eye.setDatasetInfo(idColName= "id", timeColName="Timestamp", timeFormat= '%d/%m/%Y %H:%M:%S', geometryColName= "geometry")
   eye.setClusteringType(ClusteringType.DBSCAN)
   eye.setClusteringParams(min_samples=1 ,max_distance=3)
-  eye.saveIndexedPatterns()
+  # eye.saveIndexedPatterns()
+
+  eye.loadIndexedPatterns()

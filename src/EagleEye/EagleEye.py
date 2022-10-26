@@ -68,3 +68,7 @@ class EagleEye:
     def saveIndexedPatterns(self):
         log("[+] save Indexed Patterns")
         self.algorithm.saveIndexedPatterns()
+
+    def loadIndexedPatterns(self):
+        log("[+] load Indexed Patterns")
+        self.algorithm.loadIndexedPatterns()

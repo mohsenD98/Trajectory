@@ -243,6 +243,20 @@ class Index(Algorithm):
 
         plog(result)
 
+        # save data
+        import pickle
+        with open('indexedDataResult.pkl', 'wb') as f:
+            pickle.dump(result, f)
+     
+        plotListOfGraphs(result)
+
+    def loadIndexedPatterns(self):
+        import pickle
+        with open('indexedDataResult.pkl', 'rb') as f:
+            loaded_dict = pickle.load(f)
+            plog(loaded_dict)
+            plotListOfGraphs(loaded_dict)
+
 # result example: 
 # {
 # 1.0: 
