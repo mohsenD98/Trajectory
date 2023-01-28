@@ -139,7 +139,7 @@ class Index(Algorithm):
             self.cluster.setData(d)
             cluster = self.cluster.calculate()
             clusters.append(cluster)
-            # run(self.cluster.plot)
+            run(self.cluster.plot)
             log(cluster)
             log("\n")
 
