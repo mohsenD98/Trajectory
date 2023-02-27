@@ -4,6 +4,14 @@ import "../components"
 
 Item {
     property var logger
+    Component.onCompleted: {
+        backendCore.sendDataHead.connect(handleDataHead)
+    }
+
+    function handleDataHead(value){
+        dataHead.text = value
+        logger.sendLog("Data Head Received!", "dataHead", "success")
+    }
 
     RunningGroupBox {
         id: dataHeadItem
@@ -16,10 +24,15 @@ Item {
         width: parent.width / 2 - 24
         groupLbl: "Data Head"
         onRunThisBox: {
-            logger.sendLog("Request To Get Data Head!", "dataHead", "info")
             backendCore.getDataHead()
         }
-
+        Text {
+            id: dataHead
+            color: appStyle.textHeader
+            font.family: appStyle.font
+            font.pixelSize: 14
+            anchors.centerIn: parent
+        }
     }
 
     RunningGroupBox {

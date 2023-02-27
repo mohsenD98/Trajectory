@@ -1,7 +1,7 @@
 from PySide6 import QtCore
 from sources.ViewModels.FileSourceViewModel import FileSourceViewModel
 
-class BaseAppParams(QtCore.QObject):
+class BaseAppViewModel(QtCore.QObject):
     def __init__(self):
         QtCore.QObject.__init__(self)
         self._source = "FileSource"
@@ -9,6 +9,12 @@ class BaseAppParams(QtCore.QObject):
 
     def __str__(self):
         return ("params for " + self._source + "\n" + str(self._sourceViewModel))
+
+    def preprocessing(self):
+        self._sourceViewModel.preProcessing()
+
+    def getDataSetHead(self):
+        return(self._sourceViewModel.getDataSetHead())
 
     @QtCore.Slot(str)
     def setFilePath(self, path):

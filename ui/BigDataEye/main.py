@@ -6,7 +6,7 @@ from PySide6.QtGui import QGuiApplication, QIcon
 from PySide6.QtQml import QQmlApplicationEngine
 from mainWindow import MainWindow
 
-from sources.BaseAppParams import BaseAppParams
+from sources.BaseAppViewModel import BaseAppViewModel
 from sources.BackendCore import BackendCore
 
 
@@ -18,11 +18,11 @@ if __name__ == "__main__":
 
     # Get Context
     main = MainWindow()
-    params = BaseAppParams()
-    appCore = BackendCore(params)
+    viewModel = BaseAppViewModel()
+    appCore = BackendCore(viewModel)
 
     engine.rootContext().setContextProperty("backend", main)
-    engine.rootContext().setContextProperty("backendParams", params)
+    engine.rootContext().setContextProperty("backendParams", viewModel)
     engine.rootContext().setContextProperty("backendCore", appCore)
 
     # Set App Extra Info

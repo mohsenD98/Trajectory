@@ -29,6 +29,7 @@ Rectangle {
         anchors.bottom: parent.bottom
         currentIndex: bar.currentIndex
         clip: true
+        interactive: false
 
         PreviewDataTab {
             id: firstPage
