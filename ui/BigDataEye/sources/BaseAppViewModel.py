@@ -16,6 +16,9 @@ class BaseAppViewModel(QtCore.QObject):
     def getDataSetHead(self):
         return(self._sourceViewModel.getDataSetHead())
 
+    def matplotLibDb(self):
+        return(self._sourceViewModel.getMatplotLibDbImgUrl())
+
     @QtCore.Slot(str)
     def setFilePath(self, path):
         self._sourceViewModel.setFilePath(path)

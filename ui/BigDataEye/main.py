@@ -26,6 +26,7 @@ if __name__ == "__main__":
     engine.rootContext().setContextProperty("backendCore", appCore)
 
     # Set App Extra Info
+    app.setApplicationName("BigData Eye")
     app.setOrganizationName("Dehghanzadeh Mohsen")
     app.setOrganizationDomain("N/A")
 

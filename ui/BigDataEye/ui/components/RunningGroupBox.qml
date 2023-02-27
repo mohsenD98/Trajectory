@@ -3,7 +3,6 @@ import QtQuick 2.15
 GroupBox {
     id: box
     property bool running: false
-    property bool gotResults: false
 
     signal runThisBox()
 
@@ -26,7 +25,7 @@ GroupBox {
         height: 50
         iconColor: "#b9bbbe"
         iconWidth: 48
-        visible: !running && !gotResults
+        visible: !running
         iconHeight: 48
         anchors.centerIn: parent
         iconPath: "../images/svg_icons/play.svg"

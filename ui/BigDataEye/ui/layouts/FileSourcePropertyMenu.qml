@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import Qt5Compat.GraphicalEffects
 import QtQuick.Layouts 1.15
+import Qt.labs.settings 1.0
 
 import "../components"
 import "../Style"
@@ -25,6 +26,19 @@ Flickable {
 
     function handleBackendLog(txt, source, important){
         logger.sendLog(txt, source, important)
+    }
+
+    Settings {
+        id: settings
+        category: "FileSourcePropertyMenu"
+        property alias dbPath: dbPath.text
+        property alias idColName: idColName.value
+        property alias timeColName: timeColName.value
+        property alias formatColName: formatColName.value
+        property alias geoColName: geoColName.value
+        property alias clusteringType: clusteringType.currentIndex
+        property alias clusteringMinSamplesCount: clusteringMinSamplesCount.value
+        property alias clusteringMaxDistance: clusteringMaxDistance.value
     }
 
     Column{
@@ -54,6 +68,7 @@ Flickable {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.margins: 4
+                    text: settings.dbPath
                 }
 
                 MTextInput{
@@ -62,7 +77,7 @@ Flickable {
                     anchors.right: parent.right
                     anchors.margins: 4
                     lblText: "Id Column Name: "
-                    defaultValue: "id"
+                    defaultValue: settings.idColName
                     onMValueChanged: (value)=> {
                         if(logger) {
                             logger.sendLog(lblText + value, "id", "info")
@@ -76,7 +91,7 @@ Flickable {
                     anchors.right: parent.right
                     anchors.margins: 4
                     lblText: "Time Column Name:"
-                    defaultValue: "Timestamp"
+                    defaultValue: settings.timeColName
                     onMValueChanged: (value)=> {
                         if(logger) {
                             logger.sendLog(lblText + value, "Timestamp", "info")
@@ -90,7 +105,7 @@ Flickable {
                     anchors.right: parent.right
                     anchors.margins: 4
                     lblText: "Time Format:"
-                    defaultValue: "'%d/%m/%Y %H:%M:%S'"
+                    defaultValue: settings.formatColName
                     onMValueChanged: (value)=> {
                         if(logger) {
                             logger.sendLog(lblText + value, "Format", "info")
@@ -104,7 +119,7 @@ Flickable {
                     anchors.right: parent.right
                     anchors.margins: 4
                     lblText: "Geometery Column Name:"
-                    defaultValue: "geometry"
+                    defaultValue: settings.geoColName
                     onMValueChanged: (value)=> {
                         if(logger) {
                             logger.sendLog(lblText + value, "Geometery", "info")
@@ -129,6 +144,7 @@ Flickable {
                 anchors.top: parent.top
                 anchors.topMargin: 8
                 spacing: 8
+
                 ComboBoxInput {
                     id: clusteringType
                     lblText: "Select Clustering Method: "
@@ -136,35 +152,39 @@ Flickable {
                     anchors.right: parent.right
                     anchors.margins: 4
                     inputModel: ["DB Scan", "KMeans"]
-                    defaultIndex: 0
+                    defaultIndex: settings.clusteringType
                     onMValueChanged: (index, text)=>{
                         if(logger) {
                             logger.sendLog(lblText + index + text, "Clustering", "info")
                             currentValue = text
+                            currentIndex = index
                         }
                     }
                     property string currentValue: inputModel[defaultIndex]
+                    property real currentIndex: defaultIndex
                 }
+
                 MTextInput{
                     id: clusteringMinSamplesCount
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.margins: 4
                     lblText: "Min Samples: "
-                    defaultValue: "3"
+                    defaultValue: settings.clusteringMinSamplesCount
                     onMValueChanged: (value)=> {
                         if(logger) {
                             logger.sendLog(lblText + value, "minSamples", "info")
                         }
                     }
                 }
+
                 MTextInput{
                     id: clusteringMaxDistance
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.margins: 4
                     lblText: "Max Distance: "
-                    defaultValue: "0"
+                    defaultValue: settings.clusteringMaxDistance
                     onMValueChanged: (value)=> {
                         if(logger) {
                             logger.sendLog(lblText + value, "maxSamples", "info")

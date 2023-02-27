@@ -95,11 +95,15 @@ Item {
             height: homeMessagesLoader.item? homeMessagesLoader.item.expandMode?visualization.parent.height / 3 * 2: parent.height - 22: parent.height - 22
             source: Qt.resolvedUrl("../layouts/Visualization.qml")
             enabled: loaderLeftMenu.item? loaderLeftMenu.item.runningProgress : false
-            opacity: enabled? 1: .6
+            opacity: enabled? 1: .4
             onLoaded: {
                 item.logger = logger
             }
-
+            onEnabledChanged: {
+                if(!enabled && item){
+                    item.reset()
+                }
+            }
         }
         Loader{
             id: homeMessagesLoader

@@ -5,7 +5,7 @@ import QtQuick.Controls.Material 2.15
 Item{
     height: 40
     property string lblText
-    property real defaultIndex
+    property real defaultIndex: 0
     property var inputModel
     signal mValueChanged(var index, var text)
     Component.onCompleted: {
@@ -34,5 +34,4 @@ Item{
             mValueChanged(currentIndex, inputModel[currentIndex])
         }
     }
-
 }

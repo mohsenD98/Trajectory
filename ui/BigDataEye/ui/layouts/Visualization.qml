@@ -6,6 +6,11 @@ Rectangle {
     color: "transparent"
     property var logger
 
+    function reset(){
+        previewDataTab.reset()
+
+    }
+
     TabBar{
         id: bar
         width: parent.width
@@ -32,7 +37,7 @@ Rectangle {
         interactive: false
 
         PreviewDataTab {
-            id: firstPage
+            id: previewDataTab
             logger: visRoot.logger
         }
 

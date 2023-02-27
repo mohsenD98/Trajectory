@@ -6,6 +6,7 @@ Item {
     property var logger
     Component.onCompleted: {
         backendCore.sendDataHead.connect(handleDataHead)
+        backendCore.sendMatplotLibImgUrl.connect(handleMatplotLib)
     }
 
     function handleDataHead(value){
@@ -13,6 +14,19 @@ Item {
         logger.sendLog("Data Head Received!", "dataHead", "success")
     }
 
+    function handleMatplotLib(value){
+        matplotLibDb.source = value
+        logger.sendLog("MatplotLib Image Received!", "MatPlotLib", "success")
+    }
+
+    function reset() {
+        dataHead.text = ""
+        matplotLibDb.visible = false
+
+        mathPlotItem.running = false
+        dataHeadItem.running = false
+        animationItem.running = false
+    }
     RunningGroupBox {
         id: dataHeadItem
         anchors.top: parent.top
@@ -22,17 +36,16 @@ Item {
         anchors.bottomMargin: 16
         anchors.leftMargin: 8
         width: parent.width / 2 - 24
-        groupLbl: "Data Head"
+        groupLbl: "Matplot"
         onRunThisBox: {
-            backendCore.getDataHead()
+            backendCore.matplotLibDb()
         }
-        Text {
-            id: dataHead
-            color: appStyle.textHeader
-            font.family: appStyle.font
-            font.pixelSize: 14
-            anchors.centerIn: parent
+        Image{
+            id: matplotLibDb
+            anchors.fill: parent
+            anchors.margins: 16
         }
+
     }
 
     RunningGroupBox {
@@ -43,9 +56,24 @@ Item {
         anchors.rightMargin: 8
         height: parent.height / 2 - 16
         width: parent.width / 2 - 4
-        groupLbl: "Matplot"
+        groupLbl: "Data Head"
         onRunThisBox: {
-            logger.sendLog("Request To Get Matplot", "Matplot", "info")
+            backendCore.getDataHead()
+        }
+        Rectangle{
+            anchors.fill: parent
+            color: "transparent"
+            clip: true
+            Text {
+                id: dataHead
+                color: appStyle.textHeader
+                font.family: appStyle.font
+                font.pixelSize: 14
+                anchors.top: parent.top
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.topMargin: 16
+                clip: true
+            }
         }
     }
 

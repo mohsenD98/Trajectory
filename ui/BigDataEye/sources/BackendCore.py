@@ -3,6 +3,7 @@ from PySide6 import QtCore
 class BackendCore(QtCore.QObject):
     sendLog = QtCore.Signal(str, str, str)
     sendDataHead = QtCore.Signal(str)
+    sendMatplotLibImgUrl = QtCore.Signal(str)
 
     def __init__(self, viewModel):
         QtCore.QObject.__init__(self)
@@ -17,3 +18,7 @@ class BackendCore(QtCore.QObject):
     def getDataHead(self):
         self.sendDataHead.emit(str(self.viewModel.getDataSetHead()))
 
+
+    @QtCore.Slot()
+    def matplotLibDb(self):
+        self.sendMatplotLibImgUrl.emit(str(self.viewModel.matplotLibDb()))
