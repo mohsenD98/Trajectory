@@ -12,6 +12,7 @@ TextField {
     font.pointSize: 11
     color: appStyle.textHeader
     leftPadding: 4
+    rightPadding: selectFolder.width + 8
     onTextChanged: textField.text ? Font.Medium : Font.Light
     selectByMouse: true
     selectedTextColor: "#FFFFFF"
@@ -24,14 +25,16 @@ TextField {
     FileDialog {
         id: fileDialog
         title: qsTr("Select the data directory")
-        nameFilters: ["Text files (*.txt)", "ais files (*.gpkg)", "GeoJson (*.geojson)", "CSV files(*.csv)"]
+//        nameFilters: ["GeoJson (*.geojson)", "Text files (*.txt)", "ais files (*.gpkg)", "CSV files(*.csv)"]
         onAccepted: {
-            console.log(fileDialog.currentFile)
-            textField.text = fileDialog.currentFile
+            var acceptedUrl = fileDialog.currentFile+""
+            if(acceptedUrl.includes("file:///"))
+                textField.text = acceptedUrl.slice(7)
         }
     }
 
     IconButton{
+        id: selectFolder
         width: 24
         height: 24
         iconColor: "#b9bbbe"

@@ -6,7 +6,8 @@ from PySide6.QtGui import QGuiApplication, QIcon
 from PySide6.QtQml import QQmlApplicationEngine
 from mainWindow import MainWindow
 
-from sources.BaseApp import BaseAppParams
+from sources.BaseAppParams import BaseAppParams
+from sources.BackendCore import BackendCore
 
 
 if __name__ == "__main__":
@@ -17,10 +18,12 @@ if __name__ == "__main__":
 
     # Get Context
     main = MainWindow()
-    baseApp = BaseAppParams()
+    params = BaseAppParams()
+    appCore = BackendCore(params)
 
     engine.rootContext().setContextProperty("backend", main)
-    engine.rootContext().setContextProperty("baseApp", baseApp)
+    engine.rootContext().setContextProperty("backendParams", params)
+    engine.rootContext().setContextProperty("backendCore", appCore)
 
     # Set App Extra Info
     app.setOrganizationName("Dehghanzadeh Mohsen")
@@ -29,10 +32,8 @@ if __name__ == "__main__":
     # Set Icon
     app.setWindowIcon(QIcon("app.ico"))
 
-
     # Load Initial Window
     engine.load(os.path.join(os.path.dirname(__file__), "ui/splashScreen.qml"))
-
 
     if not engine.rootObjects():
         sys.exit(-1)

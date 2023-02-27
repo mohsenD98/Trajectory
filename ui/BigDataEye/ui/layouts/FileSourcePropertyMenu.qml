@@ -17,6 +17,15 @@ Flickable {
 
     property var logger
     property bool runningProgress: false
+    onLoggerChanged: {
+        if(logger){
+            backendCore.sendLog.connect(handleBackendLog)
+        }
+    }
+
+    function handleBackendLog(txt, source, important){
+        logger.sendLog(txt, source, important)
+    }
 
     Column{
         id: left_inside_column
@@ -48,6 +57,7 @@ Flickable {
                 }
 
                 MTextInput{
+                    id: idColName
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.margins: 4
@@ -61,6 +71,7 @@ Flickable {
                 }
 
                 MTextInput{
+                    id: timeColName
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.margins: 4
@@ -74,6 +85,7 @@ Flickable {
                 }
 
                 MTextInput{
+                    id: formatColName
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.margins: 4
@@ -87,6 +99,7 @@ Flickable {
                 }
 
                 MTextInput{
+                    id: geoColName
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.margins: 4
@@ -174,11 +187,16 @@ Flickable {
             onClicked: {
                 runningProgress = true
 
-                baseApp.setFilePath(dbPath.text)
-                baseApp.setClusteringType(clusteringType.currentValue)
-                baseApp.setClusteringParams(clusteringMaxDistance.value, clusteringMinSamplesCount.value)
+                backendParams.setFilePath(dbPath.text)
+                backendParams.setIdNameInHeader(idColName.value)
+                backendParams.setTimeNameInHeader(timeColName.value)
+                backendParams.setFormatNameInHeader(formatColName.value)
+                backendParams.setGeometeryNameInHeader(geoColName.value)
+                backendParams.setClusteringType(clusteringType.currentValue)
+                backendParams.setClusteringParams(clusteringMaxDistance.value, clusteringMinSamplesCount.value)
 
                 logger.sendLog("Params Setted And Run Clicked!", "runBtn", "success")
+                backendCore.run()
             }
         }
         Button {

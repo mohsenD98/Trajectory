@@ -65,7 +65,7 @@ Item {
                 // Loader Top Left Module
                 Loader{
                     anchors.fill: bottomLeftChannel
-                    source: Qt.resolvedUrl("homePage/Profile.qml")
+                    source: Qt.resolvedUrl("../components/Profile.qml")
                 }
             }
         }
@@ -93,7 +93,12 @@ Item {
             anchors.right: right_column.left
             anchors.top: content.top
             height: homeMessagesLoader.item? homeMessagesLoader.item.expandMode?visualization.parent.height / 3 * 2: parent.height - 22: parent.height - 22
-            source: Qt.resolvedUrl("homePage/Visualization.qml")
+            source: Qt.resolvedUrl("../layouts/Visualization.qml")
+            enabled: loaderLeftMenu.item? loaderLeftMenu.item.runningProgress : false
+            opacity: enabled? 1: .6
+            onLoaded: {
+                item.logger = logger
+            }
 
         }
         Loader{

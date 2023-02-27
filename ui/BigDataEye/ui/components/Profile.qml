@@ -2,14 +2,13 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import Qt5Compat.GraphicalEffects
 
-import "../../components"
 
 Item {
     id: bottomBox
     width: 240
     height: 50
-    property url imagePath: "../../../ui/images/images/me.png"
-    property url statusIcon: "../../../ui/images/svg_icons/icon_idle.svg"
+    property url imagePath: "../images/images/me.png"
+    property url statusIcon: "../images/svg_icons/icon_idle.svg"
     property bool showPopup: false
 
     Rectangle {
