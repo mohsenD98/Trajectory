@@ -23,7 +23,7 @@ Rectangle {
         }
 
         TabButton {
-         text: qsTr("Results")
+         text: qsTr("Experiments")
         }
     }
 
@@ -41,12 +41,8 @@ Rectangle {
             logger: visRoot.logger
         }
 
-        Item {
+        ExperimentTab {
             id: secondPage
-        }
-
-        Item {
-            id: thirdPage
         }
     }
 }

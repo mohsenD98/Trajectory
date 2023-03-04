@@ -5,13 +5,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import ast
 
-from EagleEye.Algorithm.Algorithm import Algorithm
-from EagleEye.Clustering.Cluster import Cluster
-from EagleEye.Clustering.ClusteringType import ClusteringType
-from EagleEye.Pattern.Pattern import Pattern
-from EagleEye.Pattern.PatternType import PatternType
+from ..Algorithm import Algorithm
+from ...Clustering.Cluster import Cluster
+from ...Clustering.ClusteringType import ClusteringType
+from ...Pattern.Pattern import Pattern
+from ...Pattern.PatternType import PatternType
 
-from libs.Utils import *
+from ....libs.Utils import *
 from pandas import DataFrame
 from geopandas import GeoDataFrame
 import movingpandas as mpd

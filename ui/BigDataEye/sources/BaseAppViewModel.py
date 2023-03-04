@@ -19,6 +19,9 @@ class BaseAppViewModel(QtCore.QObject):
     def matplotLibDb(self):
         return(self._sourceViewModel.getMatplotLibDbImgUrl())
 
+    def runCo_movementPatternDetection(self):
+        self._sourceViewModel.co_movementPatternDetection()
+
     @QtCore.Slot(str)
     def setFilePath(self, path):
         self._sourceViewModel.setFilePath(path)

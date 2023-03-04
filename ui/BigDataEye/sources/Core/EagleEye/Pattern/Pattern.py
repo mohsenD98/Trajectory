@@ -1,5 +1,3 @@
-from EagleEye.Pattern.PatternType import PatternType
-
 class Pattern:
     def __init__(self, m, l, g, k) -> None:
         self.m = m

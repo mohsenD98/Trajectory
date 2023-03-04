@@ -18,7 +18,10 @@ class BackendCore(QtCore.QObject):
     def getDataHead(self):
         self.sendDataHead.emit(str(self.viewModel.getDataSetHead()))
 
-
     @QtCore.Slot()
     def matplotLibDb(self):
         self.sendMatplotLibImgUrl.emit(str(self.viewModel.matplotLibDb()))
+
+    @QtCore.Slot()
+    def comovementPatternDetection(self):
+        self.viewModel.runCo_movementPatternDetection()

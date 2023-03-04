@@ -1,9 +1,12 @@
 from PySide6.QtCore import QObject
 import geopandas as gpd
-
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+
+from ..Core.EagleEye import EagleEye
+from ..Core.EagleEye.Algorithm.AlgorithmType import AlgorithmType
+from ..Core.EagleEye.Clustering.ClusteringType import ClusteringType
 
 class FileSourceViewModel(QObject):
     def __init__(self):
@@ -17,6 +20,7 @@ class FileSourceViewModel(QObject):
         self.format_name_in_header = "N/A"
         self.geometery_name_in_header = "N/A"
         self.dataset = "N/A"
+        self.algorithm = "N/A"
 
     def __str__(self):
         return((" - File Url: "+ self.file_url + "\n")
@@ -61,3 +65,15 @@ class FileSourceViewModel(QObject):
 
     def setGeometeryNameInHeader(self, value):
         self.geometery_name_in_header = value
+
+    def co_movementPatternDetection(self):
+        eye = EagleEye()
+        eye.setAlgorithm(AlgorithmType.TRADITIONAL)
+        eye.loadDataset(dname= self.file_url)
+        eye.setDatasetInfo(idColName= self.id_name_in_header, timeColName=self.time_name_in_header,
+        timeFormat= self.format_name_in_header, geometryColName= self.geometery_name_in_header)
+        eye.setClusteringType(ClusteringType.DBSCAN)
+        eye.setClusteringParams(min_samples=self.min_samples ,max_distance=self.max_distance)
+        print("eye p1")
+#        eye.findPatterns()
+

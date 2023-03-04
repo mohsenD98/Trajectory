@@ -1,14 +1,12 @@
 # doc's: https://scikit-learn.org/stable/modules/generated/sklearn.cluster.DBSCAN.html
 # help: https://www.analyticsvidhya.com/blog/2020/09/how-dbscan-clustering-works/
 
-from cgitb import reset
-from EagleEye.Clustering.ClusteringType import ClusteringType
+from .ClusteringType import ClusteringType
 
 import matplotlib.pyplot as plt  
 import matplotlib
 from pandas import DataFrame
 
-from libs.Utils import log
 
 class Cluster:
     def __init__(self) -> None:

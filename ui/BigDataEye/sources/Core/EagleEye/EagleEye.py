@@ -1,11 +1,11 @@
-from EagleEye.Algorithm.Algorithm import Algorithm
-from EagleEye.Algorithm.AlgorithmType import AlgorithmType
-from EagleEye.Algorithm.relationship.RelationShip import RelationShip
-from EagleEye.Algorithm.indexing.Indexing import Index
+from .Algorithm.Algorithm import Algorithm
+from .Algorithm.AlgorithmType import AlgorithmType
+from .Algorithm.relationship.RelationShip import RelationShip
+from .Algorithm.indexing.Indexing import Index
 
-from EagleEye.Clustering.ClusteringType import ClusteringType
-from EagleEye.Algorithm.traditional.Traditional import Traditional
-from libs import *
+from .Clustering.ClusteringType import ClusteringType
+from .Algorithm.traditional.Traditional import Traditional
+from ..libs import *
 
 class EagleEye:
     def __init__(self):
