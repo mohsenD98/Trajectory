@@ -11,7 +11,7 @@ import "Style"
 Window {
     id: mainWindow
     width: 1440
-    height: 880
+    height: 980
     minimumWidth: 980
     minimumHeight: 550
     visible: true

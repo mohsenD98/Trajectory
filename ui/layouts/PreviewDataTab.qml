@@ -7,6 +7,7 @@ Item {
     Component.onCompleted: {
         backendCore.sendDataHead.connect(handleDataHead)
         backendCore.sendMatplotLibImgUrl.connect(handleMatplotLib)
+        backendCore.sendComovementPatternDetectionResult.connect(handleComovementPatternDetectionResult)
     }
 
     function handleDataHead(value){
@@ -17,6 +18,10 @@ Item {
     function handleMatplotLib(value){
         matplotLibDb.source = value
         logger.sendLog("MatplotLib Image Received!", "MatPlotLib", "success")
+    }
+
+    function handleComovementPatternDetectionResult(value){
+        logger.sendLog("Results Received: "+ value, "coMovement", "success")
     }
 
     function reset() {

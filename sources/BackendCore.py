@@ -4,6 +4,7 @@ class BackendCore(QtCore.QObject):
     sendLog = QtCore.Signal(str, str, str)
     sendDataHead = QtCore.Signal(str)
     sendMatplotLibImgUrl = QtCore.Signal(str)
+    sendComovementPatternDetectionResult = QtCore.Signal(str)
 
     def __init__(self, viewModel):
         QtCore.QObject.__init__(self)
@@ -24,4 +25,6 @@ class BackendCore(QtCore.QObject):
 
     @QtCore.Slot()
     def comovementPatternDetection(self):
-        self.viewModel.runCo_movementPatternDetection()
+        result = self.viewModel.runCo_movementPatternDetection()
+        self.sendComovementPatternDetectionResult.emit(result)
+

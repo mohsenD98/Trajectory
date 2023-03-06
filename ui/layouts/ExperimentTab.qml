@@ -2,6 +2,10 @@ import QtQuick 2.15
 import "../components"
 
 Item {
+    function reset() {
+        comovementMiningItem.running = false
+    }
+
     RunningGroupBox {
         id: comovementMiningItem
         anchors.top: parent.top
@@ -15,6 +19,5 @@ Item {
         onRunThisBox: {
             backendCore.comovementPatternDetection()
         }
-
     }
 }

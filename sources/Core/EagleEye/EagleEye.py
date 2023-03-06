@@ -5,7 +5,10 @@ from .Algorithm.indexing.Indexing import Index
 
 from .Clustering.ClusteringType import ClusteringType
 from .Algorithm.traditional.Traditional import Traditional
-from ..libs import *
+
+from ..libs.Utils import log
+from ..libs import Utils
+from ..libs.Utils import InputsType
 
 class EagleEye:
     def __init__(self):
@@ -13,27 +16,26 @@ class EagleEye:
         self.clusteringType = ClusteringType.DISTANCE
         self.trajCollection = ""
         self.algorithmType = ""
+        self.gcmpParamList = []
         self.algorithm = Algorithm()
+
+    def setGCMPParamList(self, value):
+        # [m, k, l, g]
+        self.gcmpParamList = value
+
 
     def setAlgorithm(self, alg):
         log(f"[+] setting algorithm {alg}")
         self.algorithmType = alg
 
-        if Utils.inputsType == InputsType.USER_TERMINAL: 
-            paramList= get("enter M, K, L, G (seperated by space): ", inputLen=4)
-        elif Utils.inputsType == InputsType.DEFAULT_TESTS: 
-            # in platoon L should be 1
-            paramList= [2, 3, 2, 2]
-            log(f"using default params for M= {paramList[0]}, K={paramList[1]} L={paramList[2]} G={paramList[3]} ", important= True)
-                
         if self.algorithmType == AlgorithmType.TRADITIONAL:
-            self.algorithm = Traditional(m=paramList[0], k=paramList[1], l=paramList[2], g=paramList[3])
+            self.algorithm = Traditional(m=self.gcmpParamList[0], k=self.gcmpParamList[1], l=self.gcmpParamList[2], g=self.gcmpParamList[3])
         
         elif self.algorithmType == AlgorithmType.RELATION:
-            self.algorithm = RelationShip(m=paramList[0], k=paramList[1], l=paramList[2], g=paramList[3])
+            self.algorithm = RelationShip(m=self.gcmpParamList[0], k=self.gcmpParamList[1], l=self.gcmpParamList[2], g=self.gcmpParamList[3])
         
         elif self.algorithmType == AlgorithmType.INDEXING:
-            self.algorithm = Index(m=paramList[0], k=paramList[1], l=paramList[2], g=paramList[3])
+            self.algorithm = Index(m=self.gcmpParamList[0], k=self.gcmpParamList[1], l=self.gcmpParamList[2], g=self.gcmpParamList[3])
 
     def setClusteringType(self, ctype):
         log(f"[+] setting clustering type to {ctype}")
@@ -53,9 +55,9 @@ class EagleEye:
         log("[+] setting dataset info")
         self.algorithm.setDatasetInfo(idColName, timeColName, timeFormat, geometryColName)
 
-    def findComovementPatterns(self) -> None:
+    def findComovementPatterns(self):
         log("[+] searching for patterns")
-        self.algorithm.findPatterns()
+        return(self.algorithm.findPatterns())
     
     def findeRelationPatterns(self):
         log("[+] searching for patterns")

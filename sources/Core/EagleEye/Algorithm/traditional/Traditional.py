@@ -278,6 +278,10 @@ class Traditional(Algorithm):
         log(f"[+] [Traditional] partion list generated! {len(partions)} partion is generated and each length is {len(partions[0.0])}\n")
 
         setOfCoMovements = self.findCoMovementsInPartions(partions)
+
+        resultString = str(setOfCoMovements)
          
-        log("[+] [Traditional] AllPatterns: " + str(setOfCoMovements), True)
+        log("[+] [Traditional] AllPatterns: " + resultString, False)
+
+        return resultString
                 

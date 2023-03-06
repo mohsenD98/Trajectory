@@ -39,6 +39,13 @@ Flickable {
         property alias clusteringType: clusteringType.currentIndex
         property alias clusteringMinSamplesCount: clusteringMinSamplesCount.value
         property alias clusteringMaxDistance: clusteringMaxDistance.value
+
+        property alias gcmpM: gcmpM.value
+        property alias gcmpK: gcmpK.value
+        property alias gcmpL: gcmpL.value
+        property alias gcmpG: gcmpG.value
+
+        property alias relR: relR.value
     }
 
     Column{
@@ -194,6 +201,108 @@ Flickable {
             }
         }
 
+        GroupBox{
+            height: gcmpInputsCol.height + 23
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.margins: 4
+            groupLbl: "GCMP Settings"
+            enabled: !runningProgress
+            opacity: enabled? 1: .6
+
+            Column{
+                id: gcmpInputsCol
+                width: parent.width
+                anchors.top: parent.top
+                anchors.topMargin: 8
+                spacing: 8
+
+                MTextInput{
+                    id: gcmpM
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: 4
+                    lblText: "M: "
+                    defaultValue: settings.gcmpM
+                    onMValueChanged: (value)=> {
+                        if(logger) {
+                            logger.sendLog(lblText + value, "gcmpM", "info")
+                        }
+                    }
+                }
+                MTextInput{
+                    id: gcmpK
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: 4
+                    lblText: "K: "
+                    defaultValue: settings.gcmpK
+                    onMValueChanged: (value)=> {
+                        if(logger) {
+                            logger.sendLog(lblText + value, "gcmpK", "info")
+                        }
+                    }
+                }
+                MTextInput{
+                    id: gcmpL
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: 4
+                    lblText: "L: "
+                    defaultValue: settings.gcmpL
+                    onMValueChanged: (value)=> {
+                        if(logger) {
+                            logger.sendLog(lblText + value, "gcmpL", "info")
+                        }
+                    }
+                }
+                MTextInput{
+                    id: gcmpG
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: 4
+                    lblText: "G: "
+                    defaultValue: settings.gcmpG
+                    onMValueChanged: (value)=> {
+                        if(logger) {
+                            logger.sendLog(lblText + value, "gcmpG", "info")
+                        }
+                    }
+                }
+            }
+        }
+
+        GroupBox{
+            height: relInputsCol.height + 23
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.margins: 4
+            groupLbl: "Relation Detection Settings"
+            enabled: !runningProgress
+            opacity: enabled? 1: .6
+
+            Column{
+                id: relInputsCol
+                width: parent.width
+                anchors.top: parent.top
+                anchors.topMargin: 8
+                spacing: 8
+
+                MTextInput{
+                    id: relR
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: 4
+                    lblText: "R: "
+                    defaultValue: settings.relR
+                    onMValueChanged: (value)=> {
+                        if(logger) {
+                            logger.sendLog(lblText + value, "relR", "info")
+                        }
+                    }
+                }
+            }
+        }
         Button {
             id: runBtn
             highlighted: true
@@ -207,13 +316,10 @@ Flickable {
             onClicked: {
                 runningProgress = true
 
-                backendParams.setFilePath(dbPath.text)
-                backendParams.setIdNameInHeader(idColName.value)
-                backendParams.setTimeNameInHeader(timeColName.value)
-                backendParams.setFormatNameInHeader(formatColName.value)
-                backendParams.setGeometeryNameInHeader(geoColName.value)
-                backendParams.setClusteringType(clusteringType.currentValue)
-                backendParams.setClusteringParams(clusteringMaxDistance.value, clusteringMinSamplesCount.value)
+                backendParams.setFileParams(idColName.value, geoColName.value, timeColName.value, formatColName.value, dbPath.text)
+                backendParams.setClusteringParams(clusteringMaxDistance.value, clusteringMinSamplesCount.value, clusteringType.currentValue)
+                backendParams.setGCMPParams(gcmpM.value, gcmpL.value, gcmpK.value, gcmpG.value)
+                backendParams.setRelationParams(relR.value)
 
                 logger.sendLog("Params Setted And Run Clicked!", "runBtn", "success")
                 backendCore.run()

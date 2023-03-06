@@ -8,7 +8,7 @@ Rectangle {
 
     function reset(){
         previewDataTab.reset()
-
+        experimentTab.reset()
     }
 
     TabBar{
@@ -42,7 +42,7 @@ Rectangle {
         }
 
         ExperimentTab {
-            id: secondPage
+            id: experimentTab
         }
     }
 }

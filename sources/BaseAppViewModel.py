@@ -20,32 +20,29 @@ class BaseAppViewModel(QtCore.QObject):
         return(self._sourceViewModel.getMatplotLibDbImgUrl())
 
     def runCo_movementPatternDetection(self):
-        self._sourceViewModel.co_movementPatternDetection()
+        result = self._sourceViewModel.co_movementPatternDetection()
+        return result
 
-    @QtCore.Slot(str)
-    def setFilePath(self, path):
+    @QtCore.Slot(str, str, str, str, str)
+    def setFileParams(self, id, geo, time, format, path):
         self._sourceViewModel.setFilePath(path)
+        self._sourceViewModel.setGeometeryNameInHeader(geo)
+        self._sourceViewModel.setFormatNameInHeader(format)
+        self._sourceViewModel.setTimeNameInHeader(time)
+        self._sourceViewModel.setIdNameInHeader(id)
 
-    @QtCore.Slot(str)
-    def setClusteringType(self, type):
+    @QtCore.Slot(str, str, str)
+    def setClusteringParams(self, min_samples, max_distance, type):
+        self._sourceViewModel.setClusteringParams(min_samples, max_distance)
         self._sourceViewModel.setClusteringType(type)
 
-    @QtCore.Slot(str)
-    def setIdNameInHeader(self, value):
-        self._sourceViewModel.setIdNameInHeader(value)
+    @QtCore.Slot(str, str, str, str)
+    def setGCMPParams(self, m, l, k, g):
+        self._sourceViewModel.setGcmpM(m)
+        self._sourceViewModel.setGcmpG(g)
+        self._sourceViewModel.setGcmpL(l)
+        self._sourceViewModel.setGcmpK(k)
 
     @QtCore.Slot(str)
-    def setTimeNameInHeader(self, value):
-        self._sourceViewModel.setTimeNameInHeader(value)
-
-    @QtCore.Slot(str)
-    def setFormatNameInHeader(self, value):
-        self._sourceViewModel.setFormatNameInHeader(value)
-
-    @QtCore.Slot(str)
-    def setGeometeryNameInHeader(self, value):
-        self._sourceViewModel.setGeometeryNameInHeader(value)
-
-    @QtCore.Slot(str, str)
-    def setClusteringParams(self, min_samples, max_distance):
-        self._sourceViewModel.setClusteringParams(min_samples, max_distance)
+    def setRelationParams(self, r):
+        self._sourceViewModel.setRelR(r)
