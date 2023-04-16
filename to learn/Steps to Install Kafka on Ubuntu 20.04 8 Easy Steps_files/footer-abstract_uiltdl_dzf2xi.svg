@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="520px" height="201px" viewBox="0 0 520 201" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->
+    <title>bottom-cta-right</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#1A0C2B" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#451C76" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="linearGradient-2">
+            <stop stop-color="#1A0C2B" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#321653" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="CTA-Section" transform="translate(-920.000000, -30.000000)">
+            <g id="Group">
+                <g>
+                    <g id="bottom-cta-right" transform="translate(1180.000000, 130.500000) scale(-1, -1) translate(-1180.000000, -130.500000) translate(920.000000, 30.000000)">
+                        <polygon id="Rectangle-Copy" fill="url(#linearGradient-1)" points="0 24 430 -4.19187254e-13 430 107 0 131"></polygon>
+                        <polygon id="Rectangle" fill="url(#linearGradient-2)" points="0 94 520 58 520 166 0 201"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -8,7 +8,7 @@ ToolTip{
 
     id: control
     x: -(control.width / 2 - parent.width / 2)
-    y: inverted ? 30 : -43
+    y: inverted ? 60 : -43
     delay: 100
     timeout: 15000
     visible: if(typeof parent.hovered !== 'undefined') return parent.hovered; else false

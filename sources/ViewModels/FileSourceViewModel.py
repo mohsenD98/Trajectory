@@ -54,10 +54,13 @@ class FileSourceViewModel(QObject):
         return(self.dataset.head(20))
 
     def getMatplotLibDbImgUrl(self):
+        import datetime
         self.dataset = gpd.read_file(self.file_url);
         self.dataset.plot()
-        plt.savefig('outputs/matplotlib/MatplotLibDbImgUrl.png')
-        return ("../../outputs/matplotlib/MatplotLibDbImgUrl.png")
+
+        path = 'outputs/matplotlib/MatplotLibDbImgUrl_'+datetime.datetime.now().strftime("%X") +'.png'
+        plt.savefig(path)
+        return ("../../"+path)
 
     def setFilePath(self, path):
         self.file_url = path

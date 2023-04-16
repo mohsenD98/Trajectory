@@ -1,0 +1,51 @@
+@font-face {
+ font-family: 'cbl-bullets';
+ src: url('fobts/cbl-bullets.eot?p1idqp');
+ src: url('fonts/cbl-bullets.eot?p1idqp#iefix') format('embedded-opentype'),
+      url('fonts/cbl-bullets.ttf?p1idqp') format('truetype'),
+      url('fonts/cbl-bullets.woff?p1idqp') format('woff'),
+      url('fonts/cbl-bullets.svg?p1idqp#cbl-bullets') format('svg');
+ font-weight: normal;
+ font-style: normal;
+}
+.cbl-lists li:before {
+ font-family: 'cbl-bullets' !important;
+ speak: none;
+ font-style: normal;
+ font-weight: normal;
+ font-variant: normal;
+ text-transform: none;
+ line-height: 1;
+ -webkit-font-smoothing: antialiased;
+ -moz-osx-font-smoothing: grayscale;
+}
+	
+/* TinyMCE */
+i.mce-i-icon {
+ font: 400 20px/1 dashicons;
+ padding: 0;
+ vertical-align: top;
+ speak: none;
+ -webkit-font-smoothing: antialiased;
+ -moz-osx-font-smoothing: grayscale;
+ margin-left: -2px;
+ padding-right: 2px
+}
+
+.cbl-lists {
+ list-style-type:none;
+ margin:0;
+}
+.cbl-lists li:before {
+ font-size:18px;
+ padding-right:15px;
+}
+.cbl-lists.cbl-filled li:before {
+ content: "\e900";
+}
+.cbl-lists.cbl-clear li:before {
+ content: "\e901";
+}
+.cbl-lists.cbl-boxed li:before {
+ content: "\e902";
+}

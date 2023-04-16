@@ -16,6 +16,7 @@ Item {
     }
 
     function handleMatplotLib(value){
+        matplotLibDb.visible = true
         matplotLibDb.source = value
         logger.sendLog("MatplotLib Image Received!", "MatPlotLib", "success")
     }
@@ -32,6 +33,7 @@ Item {
         dataHeadItem.running = false
         animationItem.running = false
     }
+
     RunningGroupBox {
         id: dataHeadItem
         anchors.top: parent.top
